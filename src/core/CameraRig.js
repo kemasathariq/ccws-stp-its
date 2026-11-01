@@ -74,6 +74,8 @@ export class CameraRig {
 
   reset() {
     if (this.walk.isLocked) this.walk.unlock();
+    this.mode = 'orbit';
+    this.keys.clear();
     this.camera.position.copy(this.initialPosition);
     this.orbit.target.copy(this.initialTarget);
     this.orbit.enabled = true;

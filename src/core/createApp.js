@@ -28,7 +28,9 @@ export function createApp(host) {
   const { scene, world, updateModules, disposeModules } = createWorld();
   const camera = new THREE.PerspectiveCamera(52, host.clientWidth / Math.max(host.clientHeight, 1), 0.1, 250);
   const cameraRig = new CameraRig(camera, renderer.domElement, host);
-  const clock = new THREE.Clock();
+  // THREE.Clock is deprecated since r183; Timer also pauses when the tab is hidden.
+  const timer = new THREE.Timer();
+  timer.connect(document);
   let animationFrame = 0;
   let disposed = false;
 
@@ -43,8 +45,9 @@ export function createApp(host) {
 
   function animate() {
     if (disposed) return;
-    const delta = Math.min(clock.getDelta(), 0.05);
-    const elapsed = clock.elapsedTime;
+    timer.update();
+    const delta = Math.min(timer.getDelta(), 0.05);
+    const elapsed = timer.getElapsed();
     cameraRig.update(delta);
     updateModules(delta, { elapsed, camera, scene, world });
     renderer.render(scene, camera);
@@ -63,6 +66,7 @@ export function createApp(host) {
       disposed = true;
       cancelAnimationFrame(animationFrame);
       resizeObserver.disconnect();
+      timer.dispose();
       cameraRig.dispose();
       disposeModules();
       renderer.dispose();

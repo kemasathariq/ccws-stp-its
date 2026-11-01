@@ -138,3 +138,11 @@ ccws-stp-its/
 ## Current implementation status
 
 This is a **starter scaffold**, not the completed 3D replica. It contains a runnable Three.js blockout, camera mode switching, initial UI, reference photo gallery, and module stubs. Placeholder geometry is intentionally approximate and must be refined against measurements and additional photographs.
+
+## Foundation QA notes (Prompt 00)
+
+Verified by command: `npm install` (0 vulnerabilities) and `npm run build` succeed.
+Fixed in this step: deprecated `THREE.Clock` replaced by `THREE.Timer`; missing-favicon 404 removed; walkthrough-video detection no longer fooled by Vite's SPA fallback; "Reset camera" now returns to Orbit and syncs the buttons; provisional-dimension notice added under the canvas.
+
+Manual checks still to be done in a real browser (not yet run): zero console errors, Orbit/Walk switching, pointer lock + WASD, window resize, and the WebGL-unavailable message (e.g. disable hardware acceleration).
+Known limits: Walk mode has no collision; exterior/interior are blockouts; Three.js approval from the lecturer is still outstanding.

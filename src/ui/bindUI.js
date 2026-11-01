@@ -14,12 +14,16 @@ export function bindUI(app) {
 
   orbitButton.addEventListener('click', () => selectMode('orbit'));
   walkButton.addEventListener('click', () => selectMode('walk'));
-  document.querySelector('#reset-camera').addEventListener('click', () => app.resetCamera());
+  document.querySelector('#reset-camera').addEventListener('click', () => {
+    app.resetCamera(); // Reset always returns to Orbit mode, so sync the buttons.
+    selectMode('orbit');
+  });
 
   // Show the original recording automatically once the team adds the expected file.
   const videoPath = '/assets/references/videos/site-walkthrough.mp4';
   fetch(videoPath, { method: 'HEAD' }).then((response) => {
-    if (!response.ok) return;
+    // Vite's dev server answers missing files with index.html (200), so check the type too.
+    if (!response.ok || !response.headers.get('content-type')?.startsWith('video/')) return;
     const container = document.querySelector('#video-container');
     if (!container) return;
     const video = document.createElement('video');
