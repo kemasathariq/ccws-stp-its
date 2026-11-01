@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#102b31" />
+    <meta name="description" content="Interactive 3D reconstruction concept of CCWS STP ITS." />
+    <title>CCWS STP ITS — Interactive 3D Environment</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#top" aria-label="CCWS STP ITS home">
+          <span class="brand-mark">CC</span>
+          <span><strong>CCWS STP ITS</strong><small>INTERACTIVE INNOVATION HUB</small></span>
+        </a>
+        <div class="topbar-meta"><span class="status-dot"></span> 3D PREVIEW <span class="meta-divider">|</span> TEAM PROJECT</div>
+      </header>
+
+      <main id="top">
+        <section class="intro-row">
+          <div>
+            <p class="eyebrow">DIGITAL RECONSTRUCTION PROJECT</p>
+            <h1>Explore the <em>innovation space.</em></h1>
+            <p class="intro-copy">An interactive 3D study of the CCWS STP ITS environment, its collaborative workspace, and selected innovation exhibits.</p>
+          </div>
+          <div class="team-chip"><span>PROJECT GROUP</span><strong>CCWS STP ITS Team</strong><small>Member A × Mahda</small></div>
+        </section>
+
+        <section class="workspace-grid" aria-label="3D model and project controls">
+          <div class="viewport-card">
+            <div class="viewport-heading">
+              <div><span class="live-dot"></span><strong>INTERACTIVE 3D CANVAS</strong></div>
+              <span id="render-status" class="render-status">INITIALIZING</span>
+            </div>
+            <div id="canvas-host" class="canvas-host">
+              <div id="loading-message" class="loading-message">Preparing the 3D environment…</div>
+            </div>
+            <div class="viewport-footer">
+              <span>Mouse: orbit / look around</span><span>Scroll: zoom</span><span>WASD: move in Walk Mode</span>
+            </div>
+          </div>
+
+          <aside class="control-panel">
+            <div class="panel-section">
+              <p class="eyebrow">NAVIGATION</p>
+              <h2>Camera mode</h2>
+              <div class="segmented-control" role="group" aria-label="Camera mode">
+                <button class="segment active" id="orbit-mode" type="button">Orbit</button>
+                <button class="segment" id="walk-mode" type="button">Walk</button>
+              </div>
+              <button class="secondary-button full-button" id="reset-camera" type="button">Reset camera view</button>
+              <p class="helper-text" id="camera-hint">Orbit around the blockout. Select Walk to enter first-person mode, then click the canvas.</p>
+            </div>
+            <div class="panel-divider"></div>
+            <div class="panel-section">
+              <p class="eyebrow">SCENE LEGEND</p>
+              <h2>Environment zones</h2>
+              <ul class="legend-list">
+                <li><span class="legend-swatch exterior"></span><span><strong>Exterior</strong><small>Building shell and entrance</small></span></li>
+                <li><span class="legend-swatch coworking"></span><span><strong>Co-working</strong><small>Workspace and café</small></span></li>
+                <li><span class="legend-swatch exhibit"></span><span><strong>Innovation exhibit</strong><small>Train, motorcycle, robot arm</small></span></li>
+              </ul>
+            </div>
+            <div class="panel-divider"></div>
+            <div class="panel-section reference-mini-section">
+              <p class="eyebrow">REFERENCE PHOTOS</p>
+              <h2>Real-site comparison</h2>
+              <div class="reference-mini-grid">
+                <img src="/assets/references/photos/01-coworking-sign-exterior.png" alt="Exterior sign reference" />
+                <img src="/assets/references/photos/02-main-facade.png" alt="Main facade reference" />
+                <img src="/assets/references/photos/03-coworking-interior.png" alt="Coworking interior reference" />
+                <img src="/assets/references/photos/04-train-exhibit.png" alt="Train exhibit reference" />
+              </div>
+            </div>
+            <div class="panel-divider"></div>
+            <div class="panel-section progress-section">
+              <p class="eyebrow">DEVELOPMENT STATUS</p>
+              <div class="progress-heading"><strong>Initial blockout</strong><span>Stage 01</span></div>
+              <div class="progress-track"><span></span></div>
+              <p class="helper-text">The current geometry is a placeholder. Replace its proportions after an onsite measurement and full interior walkthrough.</p>
+            </div>
+          </aside>
+        </section>
+
+        <section class="references-section">
+          <div class="section-heading"><div><p class="eyebrow">REAL-WORLD REFERENCES</p><h2>Reference photographs</h2></div><p>Use these original photos to compare the model's shape, composition, and materials.</p></div>
+          <div class="photo-grid">
+            <figure><img src="/assets/references/photos/01-coworking-sign-exterior.png" alt="CCWS co-working space sign and exterior" /><figcaption><strong>Exterior signage</strong><span>Supplied reference photo 01</span></figcaption></figure>
+            <figure><img src="/assets/references/photos/02-main-facade.png" alt="Building main facade and entrance" /><figcaption><strong>Main facade</strong><span>Supplied reference photo 02</span></figcaption></figure>
+            <figure><img src="/assets/references/photos/03-coworking-interior.png" alt="Co-working interior with tables and chairs" /><figcaption><strong>Co-working interior</strong><span>Supplied reference photo 03</span></figcaption></figure>
+            <figure><img src="/assets/references/photos/04-train-exhibit.png" alt="Train exhibit inside the co-working and innovation space" /><figcaption><strong>Train exhibit</strong><span>Supplied reference photo 04</span></figcaption></figure>
+          </div>
+        </section>
+
+        <section class="video-section">
+          <div><p class="eyebrow">SITE DOCUMENTATION</p><h2>Original walkthrough video</h2><p>Add an original 10–30 second walkthrough video to <code>public/assets/references/videos/site-walkthrough.mp4</code>.</p></div>
+          <div class="video-placeholder" id="video-container"><span class="play-icon">▶</span><span>Walkthrough video will appear here after the team records and adds it.</span></div>
+        </section>
+      </main>
+      <footer class="footer"><span>CCWS STP ITS · Computer Graphics Project</span><span>Three.js · WebGLRenderer · Vite</span></footer>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
