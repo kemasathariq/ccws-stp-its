@@ -1,48 +1,29 @@
-# Demo and Lecturer Challenge Plan
+# Rencana Demo dan Challenge
 
-## Suggested 3–4 minute walkthrough
+## Urutan demo (±7 menit)
 
-1. **Reference and objective (20 seconds):** introduce CCWS STP ITS and show original exterior/interior photos beside the model.
-2. **Exterior camera (30 seconds):** orbit around the building, identify the entrance, facade, windows, signage, and surroundings.
-3. **Interior walkthrough (30 seconds):** switch to first-person mode and move through the collaborative and exhibition zones.
-4. **Robot arm (60 seconds):** rotate base, shoulder, elbow, and wrist independently; open/close the gripper; pick and release a small object.
-5. **Motorcycle and train (30 seconds):** toggle wheel rotation and show the train exhibit information/animation.
-6. **Graphics concepts (40 seconds):** explain hierarchy, camera/projection, lighting, texture, and animation loop.
-7. **Team split (20 seconds):** explain independent module ownership and integration interface.
+1. **Foto dan video asli.** Tunjukkan foto dan video di bawah kanvas, lalu klik "Fasad, sudut kiri", "Sisi co-working", dan "Kanopi, depan" untuk membandingkan model dengan foto dari sudut yang sama. Sebutkan bahwa jam awal 16:24 adalah jam foto diambil.
+2. **Hierarki.** Centang "Urai hierarki": atap, fasad depan, portal, sisi co-working, dan kanopi bergeser dari induknya. Tunjukkan pohon objek di halaman, lalu jelaskan matriks dunia = induk × lokal.
+3. **Animasi dan pivot.** Matikan "Urai hierarki", dekati pintu masuk. Jelaskan bahwa pintu berputar pada pivot di engsel, daun jendela atas berputar pada engsel atas (sumbu X), dan tutup tempat sampah berputar pada engsel belakang (sumbu Z).
+4. **Lighting.** Geser slider "Waktu" dari pagi ke malam: arah dan warna matahari berubah, bayangan bergeser, lalu malam hari lampu portal dan kanopi menyala dan jendela bercahaya. Matikan dan nyalakan "Bayangan" untuk menunjukkan shadow map.
+5. **Tekstur.** Matikan "Tekstur": bahan bertekstur kembali ke warna rata-ratanya. Jelaskan tekstur gambar (paving dari foto), tekstur prosedural, bump, dan alpha test pada huruf.
+6. **Pembagian tugas.** Tiap anggota menjelaskan bagiannya sesuai tabel di halaman.
 
-## Questions both members should be able to answer
+Parameter URL mempercepat demo, misalnya `?jam=19.5&kamera=pintuUtama` atau `?urai=1&kamera=hierarki`.
 
-### Three.js / WebGL
-- Why is Three.js being used, and what does `WebGLRenderer` do?
-- Which parts does Three.js automate compared with raw WebGL?
-- Why did the team ask the lecturer to confirm library acceptability?
+## Challenge yang mungkin diminta
 
-### Transformation and hierarchy
-- What is the difference between local and world coordinates?
-- What happens to child objects when the parent pivot rotates?
-- Why is the wheel attached to a wheel pivot rather than directly animated as part of the chassis?
-- How does the robot shoulder affect the elbow, forearm, and gripper?
+| Challenge | Yang diubah |
+|---|---|
+| Ubah warna atau intensitas lampu | `LAMP_COLOR` dan `lamps` di `src/models/ccwsBuilding.js` |
+| Tambah lampu titik | Tambah entri di `lamps` (maksimal 8, lihat `MAX_POINT_LIGHTS` di `renderer.js`) |
+| Ubah arah atau warna matahari | `arcDirection` dan `sunColor` di `src/world/dayNight.js` |
+| Percepat atau perlambat animasi | Konstanta periode di `animateObjects` (`src/world/animator.js`), atau `HOURS_PER_SECOND` di `createApp.js` |
+| Pintu membuka ke arah sebaliknya | Tanda rotasi `mainDoors[i].rotation[1]` di `animator.js` |
+| Tambah objek baru sebagai anak objek lain | `boxFrom(...)` lalu `addChildren(induk, objekBaru)`; ikut bergerak bersama induknya |
+| Ganti tekstur | Ganti `texture`/`tileSize` pada `MATERIALS` di `ccwsBuilding.js` |
+| Ubah ukuran gedung | `CCWS_DIMENSIONS` di `ccwsBuilding.js`; lingkungan mengikuti karena posisinya relatif terhadap ujung gedung |
+| Matikan specular atau ambient | Ubah baris `specular` atau `ambient` di `LIT_FS` (`renderer.js`) |
+| Ubah FOV atau posisi kamera | `CAMERA_PRESETS` di `src/world/cameraPresets.js` |
 
-### Camera
-- What are camera position, target, and up direction?
-- What does perspective projection change when an object is farther away?
-- How does OrbitControls differ from a first-person camera controller?
-
-### Lighting and texture
-- What is the role of a surface normal?
-- What do ambient, diffuse, and specular contributions represent?
-- What are UV coordinates?
-- Why should rough concrete, glass, wood, and metal use different material settings?
-
-### Animation and interaction
-- Why use delta time rather than adding a fixed amount per frame?
-- How does raycasting detect which object the user selected?
-- How is an object attached to and released from the robot gripper?
-
-## Challenge practice
-
-Each member should be able to make a small live change safely:
-- Member A: change one robot joint angle limit or camera starting position and explain the resulting matrix/hierarchy effect.
-- Mahda: change a wheel spin rate, train material, or a texture repeat value and explain the change.
-
-Do not memorize answers without understanding the actual implementation. The code and explanation must match.
+Latihan: masing-masing anggota mencoba setiap baris di tabel ini minimal sekali, menjalankan `npm run dev`, dan menjelaskan efeknya. Gunakan hanya fitur yang sudah diuji; jangan menyatakan fitur yang belum dibuat seolah sudah bekerja.

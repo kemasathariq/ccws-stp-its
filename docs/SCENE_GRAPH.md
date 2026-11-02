@@ -1,100 +1,50 @@
-# Scene Graph and Hierarchical Object Tree
+# Pohon Hubungan Objek
 
-## World-level hierarchy
-
-```text
-CCWS_STP_World
-├── Lighting
-├── GroundAndSiteContext
-├── Exterior
-│   ├── FoundationAndFloor
-│   ├── WallSegments
-│   ├── RoofAndOverhangs
-│   ├── EntranceFrame
-│   │   ├── DoorLeft
-│   │   └── DoorRight
-│   ├── WindowFrames
-│   ├── FacadeSignage
-│   ├── Pavement
-│   └── Vegetation
-├── Interior
-│   ├── Floor
-│   ├── CeilingAndBeams
-│   ├── WindowWallLeft
-│   ├── WindowWallRight
-│   ├── WorkspaceFurniture
-│   │   ├── Tables
-│   │   ├── Chairs
-│   │   └── Sofas
-│   └── Cafe
-│       ├── Counter
-│       ├── Shelves
-│       └── Equipment
-└── InnovationExhibition
-    ├── TrainExhibit
-    ├── ElectricMotorcycle
-    └── RobotArm
-```
-
-## Robot arm hierarchy
+Pohon lengkap ditampilkan otomatis di halaman utama (bagian "Pohon hubungan objek"), dibaca langsung dari scene graph yang dirender (`src/ui/renderSceneTree.js`). Ringkasan di bawah mengikuti `src/models/ccwsBuilding.js` dan `src/models/environment.js`; node sejenis diringkas, dan `→` berarti "induk dari".
 
 ```text
-RobotArmRoot
-└── BaseVisual
-    └── BaseYawPivot
-        └── TurntableVisual
-            └── ShoulderPivot
-                ├── UpperArmVisual
-                └── ElbowPivot
-                    ├── ForearmVisual
-                    └── WristPivot
-                        └── GripperRoot
-                            ├── PalmVisual
-                            ├── LeftFingerPivot
-                            │   └── LeftFingerVisual
-                            └── RightFingerPivot
-                                └── RightFingerVisual
-
-PickableObject (world child while released; attached to GripperRoot while held)
+Scene
+├── Environment
+│   ├── GroundZones          Lawn, Paving (tekstur foto), area tanah, CanopyPad, ShedPath, ConcretePipe0..3
+│   ├── PalmCornerPivot      → PalmCornerTrunk, PalmCornerFrondPivot0..17 → PalmCornerFrond0..17   (pelepah bergoyang)
+│   ├── Trees                → Tree…Pivot ×6 → Tree…Trunk, Tree…CrownPivot → cabang dan tajuk      (tajuk bergoyang)
+│   ├── EastAnnex            gedung samping satu lantai (polos, atap pelana genteng)
+│   ├── BackBuilding         gedung belakang dua lantai (polos) + Connector satu lantai
+│   └── ParkingShed          → ShedRoof, ShedPost…, ShedFence → FenceFront/West/Back/East (pagar pipa biru, bukaan di ujung jalur paving)
+└── CCWS
+    ├── MainBlock
+    │   ├── Walls
+    │   ├── RoofGroup        → Roof (tekstur genteng + bump), RidgeCap
+    │   └── GableWest, GableEast   (dinding segitiga, sejajar kemiringan atap)
+    ├── FrontFacade          (bidang dinding depan, z = D/2)
+    │   ├── PierLeft/Right, Fascia, FasciaJoint, FloorBand, Plinth (tekstur noda)
+    │   ├── UpperGlazing0..2, UpperRoomBehind0..2, UpperTransom/Head/Sill0..2, UpperMullion0..23
+    │   ├── FrontFacadeSash… ×21 (Pivot di engsel atas) → Glass, FrameTop/Bottom/Left/Right
+    │   ├── GroundWindows0..3 (tekstur teralis) + GroundFrames0..3 → Mullion, Transom, Sill
+    │   ├── Pebbles0..1, Grass0..1, FrontFacadePlanter0..5 → Pot, Soil, Leaf0..5 → LeafBlade, LeafTip
+    │   ├── FrontFacadeDownpipe0..3 → Top, Neck, Main, Shoe, Bracket0..1
+    │   └── Entrance
+    │       ├── PortalWall…, PortalRoof, PortalFloor, PortalLamp
+    │       ├── PortalSign, PortalSubtitle → Layer0..n   (huruf berlapis, alpha test)
+    │       ├── EntranceWindowWest/East + EntranceFramesWest/East
+    │       ├── DoorFrameHead/West/East, DoorTransom
+    │       ├── MainDoorWestPivot, MainDoorEastPivot (di engsel) → Glass, Stile0..1, Rail0..1, Handle
+    │       └── CheekWallWest/East, StepTopWest/BottomWest, Ramp, StepTopEast/BottomEast   (tangga – ramp – tangga)
+    ├── BackFacade           (z = −D/2, fungsi yang sama diputar 180° pada sumbu Y; tanpa portal, bagian tengah tertutup penghubung ke gedung belakang)
+    └── CoworkingEnd         (dinding gable barat, x = −L/2)
+        ├── SlotWindow, SlotLouver0..3, CoworkingSign → Layer0..4
+        ├── SideDoorFrame…, SideDoorBack, SideDoorNorthPivot, SideDoorSouthPivot (di engsel) → daun pintu
+        ├── SideLanding, Sink, SinkTap
+        └── Canopy
+            ├── CanopySlab (segilima), CanopySlabBand, CanopyCeiling (tekstur plafon), CanopyLampInner/Outer
+            ├── CanopyColumnNorth/South + CanopyArmNorth/South   (tiang menyambung jadi lengan miring, rangka ⌂)
+            ├── BinPlatform
+            ├── WheelieBin0..2 → Body, Rim, Handle, Axle, Wheel…, LidPivot (engsel belakang) → Lid
+            └── BinRack → Shelf, Leg…, RailBack, PedalBin0..2 → Body, LidPivot → Lid, Knob
 ```
 
-Each joint uses a pivot `THREE.Group` positioned at the joint center. The visual mesh is offset from that pivot. Store joint angles in an explicit state object and apply limits.
+Matriks dunia anak = matriks dunia induk × matriks lokal anak, dengan matriks lokal = T · Rz · Ry · Rx · S (`src/webgl/mat4.js`, `src/webgl/sceneNode.js`).
 
-## Motorcycle hierarchy
-
-```text
-MotorcycleRoot
-├── Chassis
-├── BodyPanels
-├── Seat
-├── HandlebarAssembly
-├── FrontWheelPivot
-│   ├── Tire
-│   └── RimAndHub
-└── RearWheelPivot
-    ├── Tire
-    └── RimAndHub
-```
-
-Wheel rotation must be local to each wheel pivot. A power toggle controls wheel animation state. Wheel speed should be updated using delta time.
-
-## Train exhibit hierarchy
-
-```text
-TrainExhibitRoot
-├── MainCarriageBody
-├── Roof
-├── FrontAndSidePanels
-├── WindowGroups
-├── DoorAssembly (if present in the actual exhibit)
-│   ├── LeftDoor
-│   └── RightDoor
-├── BogiesAndWheels (if visible / needed)
-└── DestinationDisplay
-```
-
-Only build details that can be observed or reasonably simplified from the reference. Mark uncertain elements as assumptions.
-
-## Hierarchy diagram requirement
-
-The final submission must show the parent-child relationships. Use this document to create a visual tree (Mermaid or image) and ensure it matches the actual code structure.
+- **Induk menggerakkan anak.** Menggeser `FrontFacade` atau `CoworkingEnd` ikut menggeser seluruh anaknya; inilah yang ditunjukkan tombol "Urai hierarki".
+- **Satu fungsi, dua fasad.** `FrontFacade` dan `BackFacade` dibuat oleh fungsi yang sama; `BackFacade` hanya berbeda translasi dan rotasinya. Sisi belakang dibuat sama dengan depan berdasarkan informasi tim, karena tidak ada foto sisi belakang.
+- **Pivot.** Setiap simpul `…Pivot` diletakkan di engsel atau poros. Animator hanya mengubah rotasi pivot itu (`src/world/animator.js`).

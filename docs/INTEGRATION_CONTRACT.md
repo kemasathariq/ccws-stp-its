@@ -1,79 +1,16 @@
-# Integration Contract
+# Kesepakatan Integrasi
 
-This contract allows Member A and Mahda to develop models in parallel without editing the same files.
+Struktur kode yang sekarang dipakai:
 
-## Model factory interface
+| Bagian | File | Tugas |
+|---|---|---|
+| Renderer | `src/webgl/renderer.js` | Satu-satunya pemilik WebGL context, shader, buffer, tekstur, dan shadow map. Menerima scene graph, kamera, dan data lingkungan per frame. |
+| Matematika dan geometri | `src/webgl/mat4.js`, `geometry.js`, `sceneNode.js` | Matriks, bentuk dasar, dan simpul hierarki. Tidak menyentuh WebGL. |
+| Kamera | `src/webgl/orbitCamera.js`, `src/world/cameraPresets.js` | Kamera orbit dan sudut-sudut yang dicocokkan dengan foto. |
+| Model | `src/models/ccwsBuilding.js`, `environment.js`, `parts.js`, `proceduralTextures.js` | Hanya membuat data: simpul, geometri, dan material. Mengembalikan `root`, simpul yang dianimasikan (`animated`), dan lampu (`lamps`). Tidak membuat context atau loop. |
+| Dunia | `src/world/dayNight.js`, `animator.js` | Siang–malam (data cahaya dan langit) dan animasi berbasis waktu yang mengubah pivot. |
+| Aplikasi dan UI | `src/core/createApp.js`, `src/ui/*` | Loop `requestAnimationFrame`, opsi halaman, pohon objek. |
 
-Every independently owned model exports a named factory and returns:
+Material adalah objek biasa: `color`, opsional `texture` (URL atau canvas), `tileSize` (meter per pengulangan), `flatColor` (warna saat tekstur dimatikan), `specular`, `shininess`, `bump`, `reflect`, `emissive` dan `glow`, `emissiveMask`, `alphaTest`, `castShadow`.
 
-```js
-{
-  group: THREE.Group,
-  update(deltaSeconds, state) {},
-  interactiveTargets: THREE.Object3D[],
-  dispose() {}
-}
-```
-
-A model may expose extra methods, such as `setPowered(boolean)` or `setJointAngle(name, radians)`, but must retain the common interface above.
-
-## Factory signature
-
-```js
-export function createExampleModel(config = {}) {
-  const group = new THREE.Group();
-  const interactiveTargets = [];
-
-  function update(deltaSeconds, state = {}) {
-    // Update animation using deltaSeconds. Do not assume a fixed FPS.
-  }
-
-  function dispose() {
-    // Dispose geometries/materials/textures created exclusively by this model.
-  }
-
-  return { group, update, interactiveTargets, dispose };
-}
-```
-
-## Rules
-
-1. The caller adds `module.group` to the world/scene registry. Model factories should not directly mutate the global scene.
-2. All child components must be parented below the model's root group.
-3. Model root should be at a documented local origin. The integrator controls world placement through the root group.
-4. Do not create a new renderer or camera inside a model module.
-5. Do not create a private animation loop. Use the provided `update(deltaSeconds, state)` method.
-6. Interactive meshes should include descriptive `userData`, for example:
-
-```js
-mesh.userData.interaction = {
-  id: 'robot-arm-gripper',
-  title: 'Robot arm gripper',
-  description: 'Opens and closes to hold a small object.',
-  action: 'select-robot-arm'
-};
-```
-
-7. Interactive targets should be returned in `interactiveTargets`.
-8. Do not import UI components into model code. UI calls model methods through a controller/interface.
-9. Use shared materials only if ownership/lifecycle is clear. Avoid disposing a material still used by another model.
-10. Update this contract only after both members agree.
-
-## Ownership boundaries
-
-| File/folder | Owner |
-|---|---|
-| `src/core/**` | Member A |
-| `src/scene/layoutConfig.js` | Member A |
-| `src/scene/SceneRegistry.js` | Member A |
-| `src/scene/createWorld.js` | Shared; integration owner Member A |
-| `src/models/environment/exterior.js` | Member A |
-| `src/models/exhibits/robotArm.js` | Member A |
-| `src/models/environment/interior.js` | Mahda |
-| `src/models/exhibits/train.js` | Mahda |
-| `src/models/exhibits/motorcycle.js` | Mahda |
-| `src/models/furniture/**` | Mahda |
-| `src/models/cafe/**` | Mahda |
-| `src/lighting/**` | Member A, input from Mahda |
-| `src/ui/**` | Member A; Mahda provides interaction requirements |
-| `index.html`, `src/main.js`, `package.json`, `docs/INTEGRATION_CONTRACT.md` | Shared; coordinate before edits |
+Koordinasikan perubahan file bersama. File Three.js dari scaffold awal (`src/core/CameraRig.js`, `src/core/InteractionManager.js`, `src/scene/`, `src/lighting/`, `src/assets/`, `src/models/environment/`, `src/models/exhibits/`) tidak dipakai lagi.

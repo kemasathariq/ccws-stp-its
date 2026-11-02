@@ -1,39 +1,8 @@
-# Coordinate System and Modelling Convention
+# Koordinat dan Transformasi
 
-## World convention
-
-- X: building width, left to right when facing the front facade.
-- Y: vertical height, positive upward.
-- Z: building depth, with the front facade provisionally at negative Z.
-- Ground plane: Y = 0.
-- Main building root: world origin `(0, 0, 0)`.
-- Intended scale: one world unit represents approximately one metre. This is a modelling convention; dimensions remain estimates until measured.
-
-## Object origins and pivots
-
-Each model must document its root origin and meaningful pivot locations.
-
-- Building root: center of footprint.
-- Door pivot: hinge axis.
-- Motorcycle wheel pivot: center of axle.
-- Robot base pivot: center of turntable.
-- Robot shoulder/elbow/wrist pivots: actual conceptual joint centers.
-- Train root: center of the displayed segment or a consistently documented end origin.
-
-## Transform order
-
-Three.js `Object3D` combines local position, rotation, and scale into a local matrix and propagates the result through the parent hierarchy into `matrixWorld`. Do not manually multiply transforms in inconsistent orders. If the project needs explicit matrix demonstrations, add small explanatory helpers/examples and document conventions.
-
-## Parent-child rule
-
-A child transform is local to its parent. Moving a parent carries all descendants. Rotating a wheel pivot must spin only that wheel; rotating a robot shoulder must carry the elbow, forearm, wrist, and gripper.
-
-## Camera
-
-- Orbit mode: perspective camera controlled by OrbitControls.
-- Walk mode: first-person perspective camera controlled by PointerLockControls and WASD movement.
-- Camera near/far planes should be configured to include the entire blockout without excessive depth range.
-
-## Dimension rules
-
-All estimated dimensions must be centralized in configuration. Use labels such as `estimated`, `measured`, or `confirmed` in comments/docs. Never silently replace a measured value with a guess.
+- **Sumbu dan satuan.** X = panjang gedung (sisi co-working di −X), Y = tinggi (tanah di Y = 0), Z = kedalaman (fasad utama menghadap +Z). Satuan meter. Ukuran yang belum diukur adalah perkiraan dari foto.
+- **Matriks.** Disimpan column-major (elemen `[kolom * 4 + baris]`) dan dikalikan dengan vektor kolom: v' = M · v. Matriks lokal = T · Rz · Ry · Rx · S, jadi skala diterapkan dulu, lalu rotasi X, Y, Z, lalu translasi (`compose` di `src/webgl/mat4.js`).
+- **Hierarki.** Matriks dunia anak = matriks dunia induk × matriks lokal anak (`traverse` di `src/webgl/sceneNode.js`). Vertex shader menghitung `uProjection * uView * uModel * posisi`.
+- **Normal.** Ditransformasi dengan invers-transpose 3×3 dari matriks dunia (`normalMatrix`).
+- **Pivot.** Pintu berporos di engsel, daun jendela atas di engsel atasnya, tutup tempat sampah di engsel belakang, dan tajuk pohon di puncak batang. Rotasi positif mengikuti aturan tangan kanan: sumbu X memiringkan +Y ke +Z, sumbu Y memutar +Z ke +X.
+- **Bayangan.** Matriks ruang cahaya = ortografis × `lookAt` dari arah matahari ke pusat adegan (`lightSpaceMatrix` di `src/webgl/renderer.js`).

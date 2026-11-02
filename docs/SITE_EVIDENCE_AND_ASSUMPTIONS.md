@@ -1,53 +1,19 @@
-# Site Evidence and Assumptions
+# Referensi dan Asumsi Lokasi
 
-## 1. Evidence supplied by the team
+Gunakan foto asli fasad yang tersedia sebagai acuan utama bentuk bangunan, pintu, jendela, dan lingkungan. Foto interior dan exhibit yang tersedia tetap dapat disimpan sebagai arsip, tetapi tidak dimodelkan karena scope proyek adalah tampak luar.
 
-The current repository includes four photographs supplied for this project:
+Menurut informasi tim, mockup gerbong kereta di dalam CCWS memakan sekitar 3/7 panjang ruangan dan hampir selebar ruangan, dengan sedikit ruang kosong di sampingnya untuk melihat bagian depan mockup (lihat `interior-lorong-ruang-kerja.jpg` dan `interior-pameran-kereta.png`). Porsi 3/7 ini perkiraan, bukan hasil pengukuran. Mockup berada di dalam bangunan, sehingga tidak termasuk target pemodelan tampak luar.
 
-| Photo | What is directly visible | What it supports |
-|---|---|---|
-| `01-coworking-sign-exterior.png` | White/light-gray building facade, raised geometric volume, trees, sign reading “CO-WORKING SPACE”, paved forecourt | Exterior massing, signage placement, vegetation and approach |
-| `02-main-facade.png` | Long facade, upper and lower window bands, central recessed entry frame, steps, vertical rainwater pipes, IBI graphics | Main facade rhythm, door, windows, entry platform |
-| `03-coworking-interior.png` | Bright high-ceiling room, high-level and lower windows, tables, chairs, sofas, counter area, ceiling lights and AC units | Interior arrangement and furniture categories |
-| `04-train-exhibit.png` | Large indoor train-like exhibit segment, red upper section, white body, dark windows, display labels | Approximate exhibit silhouette and visible exterior colors |
+Informasi tata letak dari tim: di belakang CCWS ada satu gedung dua lantai yang sejajar, memanjang dari bangunan berbalkon di barat kanopi sampai ujung gedung kecil beratap genteng di sisi timur, dan tersambung ke bagian tengah sisi belakang CCWS lewat penghubung satu lantai (pasangan dari portal pintu masuk di depan). Gedung kecil di timur adalah bangunan terpisah satu lantai. Gedung belakang dan gedung kecil di timur dimodelkan polos (dinding putih dan atap pelana genteng) karena fokus proyek adalah CCWS; jaraknya ke CCWS adalah perkiraan.
 
-These photographs are visual evidence only. A photograph does not establish exact dimensions, room adjacency, building identity, manufacturer, or the full layout outside its field of view.
+Proporsi pita fasad (jendela bawah, pita lantai, kaca atas, pita atas) diturunkan dari perbandingan tinggi di `eksterior-fasad-serong-kiri.jpg`, dengan tinggi jendela bawah dianggap 2,4 m.
 
-## 2. Web verification notes
+Tata letak fasad depan diturunkan dari kedua foto fasad, foto pintu utama, dan video kedua. Dari tiap pilar ujung ke arah tengah urutannya sama: talang di depan kolom pertama, blok jendela teralis 6 kolom, talang, blok 2 kolom, lalu portal pintu masuk di tengah. Blok 2 kolom di sisi seberang portal tertutup oleh portal yang menonjol, sehingga di foto miring blok di seberang tampak seperti blok "panel kecil". Dengan lebar panel sekitar 1,05 m, panjang gedung diperkirakan 24,5 m. Kaca lantai atas dibagi tiga kelompok yang dipisah talang, dengan kusen abu-abu segaris kolom jendela bawah. Di dalam portal ada pintu kaca ganda di tengah yang diapit jendela 2 kolom sempit, dan di depannya, di antara dua blok pengapit rendah, berurutan tangga, ramp di tengah, lalu tangga lagi (informasi tim). Di atas alas ada jalur kerikil putih tempat pot berada, lalu rumput sintetis di bagian depan.
 
-- ITS's Kafe Belajar page has a listing specifically called **CCWS Science Techno Park** and describes it as a collaborative place for students. It does not provide a measured floor plan in the retrieved page: https://www.its.ac.id/kafe-belajar/.
-- Another ITS page lists other CCWS locations. Do not transfer their room layouts to this STP location without evidence.
-- An ITS Science Techno Park article describes an incubator with co-working-space facilities, but it is not a measured plan of the photographed room.
-- The train photo visibly reads “HST JAKARTA”. The team describes it as a Whoosh train segment, but the photograph alone does not verify official exhibit identity. Use neutral label “Train Exhibit” until confirmed.
+Di sisi co-working (`eksterior-coworking-gable-kanopi.jpg`, `eksterior-kanopi-depan.jpg`), pintu samping berada di bawah jendela vertikal di puncak gable, kanopi selebar sekitar 4,9 m berpusat tepat pada pintu itu, dan tulisan CO-WORKING SPACE berada di antara tepi kanopi dan sudut depan. Susunan kanopi dibaca terutama dari `eksterior-kanopi-samping.jpg`. Pelat atap datar dan tebal (±0,75 m, dengan pita bawah sedikit masuk) berbentuk segilima dengan ujung lancip menghadap barat. Dua tiang persegi berdiri tepat di luar kedua sisi panjang pelat dan menjulang sedikit di atasnya. Dari puncak tiang, masing-masing tiang langsung menyambung menjadi lengan miring ke tengah, sehingga tiang dan lengan membentuk satu rangka seperti garis luar rumah (⌂). Segitiga di antara lengan dan pelat terbuka, dan di foto samping langit terlihat menembusnya. Di puncak, kedua lengan berakhir dengan potongan tegak dan celah sempit, yang dari foto depan tampak seperti dua sirip. Tinggi dan lebar kanopi adalah perkiraan.
 
-## 3. Unverified assumptions to resolve onsite
+Pembagian tanah mengikuti foto: paving herringbone di sekitar gedung, di bawah dan di selatan kanopi; tanah cokelat di barat kanopi dan di sekitar pohon besar dekat kanopi, dengan potongan pipa beton di depan kanopi; pelat atap kanopi berbentuk segilima dengan ujung lancip menghadap barat ke arah parkir motor; jalur paving dari kanopi ke parkir motor; dan rumput di luar area paving. Batas tiap area adalah perkiraan.
 
-- Whether the two exterior facade photographs are different sides of one building or separate structures within the complex.
-- The exact building footprint and number of floors.
-- Which side of the room contains the innovation exhibition.
-- Exact boundary and adjacency between co-working and exhibition halves.
-- Exact cafe counter location, dimensions, and equipment.
-- Whether the room contains meeting rooms, prayer room, storage, or other spaces not visible in the supplied image.
-- Exact identity and full dimensions of the train exhibit.
-- Exact make/model of the electric motorcycle and robot arm.
+Foto tidak menunjukkan ukuran pasti atau seluruh sisi bangunan. Gunakan perkiraan yang masuk akal dan jangan menyebutnya sebagai hasil pengukuran. Jika memungkinkan, ambil sudut foto tambahan dan rekam video asli lokasi untuk halaman pengumpulan.
 
-## 4. Field measurement checklist
-
-Record approximate dimensions and take photos with overlapping viewpoints:
-
-- [ ] Front facade width and total visible height.
-- [ ] Building depth and side elevations.
-- [ ] Door width/height and entrance recess depth.
-- [ ] Main window widths, heights, sill heights, and spacing.
-- [ ] Interior room width, length, and ceiling height.
-- [ ] Window and door positions inside the room.
-- [ ] Co-working zone boundary and number/position of furniture groups.
-- [ ] Cafe counter length, depth, height, and equipment.
-- [ ] Train exhibit width, height, depth, and visible details.
-- [ ] Motorcycle overall length, height, wheel diameter, and axle spacing.
-- [ ] Robot arm base size, link lengths, joint axes, and end-effector type.
-- [ ] Video walkthrough from entrance to each zone.
-
-## 5. Evidence policy
-
-Use the supplied photos and team-captured media as references. Do not use generated imagery as if it were a site photograph. Any external texture/model asset must be recorded with its source and license/permission in `docs/ASSET_REGISTER.md`.
+Catat sumber bahan yang digunakan di `docs/ASSET_REGISTER.md`. Gerakan animasi adalah interpretasi untuk demonstrasi jika tidak ada bukti bahwa objek aslinya bergerak demikian.
