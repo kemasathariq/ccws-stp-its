@@ -1,3 +1,8 @@
-# Original walkthrough video
+# Video asli lokasi
 
-Record a short walkthrough of the actual CCWS STP ITS site. Recommended filename: `site-walkthrough.mp4`. Capture the building approach, entrance, co-working area, cafe/counter if present, and exhibition area. Keep faces and personal conversations out of frame where possible. Update `docs/ASSET_REGISTER.md` with the capture date and file details.
+Dua rekaman asli tampak luar (potret, sekitar 5 detik masing-masing), ditampilkan di bagian Video pada halaman utama dan dicatat di `docs/ASSET_REGISTER.md`.
+
+| File | Isi |
+|---|---|
+| `20261102_162807.mp4` | Dari sisi gable co-working menuju fasad memanjang |
+| `20261102_162834.mp4` | Menyapu fasad sampai pintu masuk OPOP Training Center |
