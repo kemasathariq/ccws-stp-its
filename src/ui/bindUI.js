@@ -1,37 +1,52 @@
-export function bindUI(app) {
-  const orbitButton = document.querySelector('#orbit-mode');
-  const walkButton = document.querySelector('#walk-mode');
-  const hint = document.querySelector('#camera-hint');
+import { formatClock } from '../world/dayNight.js';
+import { renderSceneTree } from './renderSceneTree.js';
 
-  function selectMode(mode) {
-    app.setCameraMode(mode);
-    orbitButton.classList.toggle('active', mode === 'orbit');
-    walkButton.classList.toggle('active', mode === 'walk');
-    hint.textContent = mode === 'walk'
-      ? 'Click the canvas to lock the pointer. Use W, A, S, D to move. Press Escape to release the pointer.'
-      : 'Orbit around the blockout. Drag to rotate and scroll to zoom.';
+// Optional URL parameters open the scene in a given state, e.g. for a demo:
+// ?jam=20.5&kamera=pintuUtama&urai=1&animasi=0&bayangan=0&tekstur=0&siklus=1
+function applyQuery(app) {
+  const query = new URLSearchParams(window.location.search);
+  if (query.has('jam')) app.set('hour', Math.min(24, Math.max(0, Number(query.get('jam')) || 0)));
+  for (const [key, option] of [['siklus', 'autoTime'], ['animasi', 'animate'], ['bayangan', 'shadows'], ['tekstur', 'textures'], ['urai', 'exploded']]) {
+    if (query.has(key)) app.set(option, query.get(key) === '1');
+  }
+  if (app.presets[query.get('kamera')]) app.jumpTo(query.get('kamera'));
+}
+
+export function bindUI(app) {
+  if (!app) {
+    document.querySelector('.controls')?.setAttribute('hidden', '');
+    return;
+  }
+  const $ = (selector) => document.querySelector(selector);
+  applyQuery(app);
+
+  $('#reset-camera').addEventListener('click', () => app.resetCamera());
+
+  const slider = $('#time-of-day');
+  const label = $('#time-label');
+  const showTime = ({ hour }) => {
+    slider.value = String(hour);
+    label.textContent = formatClock(hour);
+  };
+  slider.addEventListener('input', () => app.set('hour', Number(slider.value)));
+  app.onChange(showTime);
+  showTime(app.options);
+
+  for (const [id, option] of [['#auto-time', 'autoTime'], ['#animate', 'animate'], ['#shadows', 'shadows'], ['#textures', 'textures'], ['#exploded', 'exploded']]) {
+    const input = $(id);
+    input.checked = app.options[option];
+    input.addEventListener('change', () => app.set(option, input.checked));
   }
 
-  orbitButton.addEventListener('click', () => selectMode('orbit'));
-  walkButton.addEventListener('click', () => selectMode('walk'));
-  document.querySelector('#reset-camera').addEventListener('click', () => {
-    app.resetCamera(); // Reset always returns to Orbit mode, so sync the buttons.
-    selectMode('orbit');
-  });
+  const presets = $('#camera-presets');
+  for (const [name, preset] of Object.entries(app.presets)) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = preset.label;
+    if (preset.photo) button.title = `Sudut yang mendekati foto ${preset.photo}`;
+    button.addEventListener('click', () => app.flyTo(name));
+    presets.append(button);
+  }
 
-  // Show the original recording automatically once the team adds the expected file.
-  const videoPath = '/assets/references/videos/site-walkthrough.mp4';
-  fetch(videoPath, { method: 'HEAD' }).then((response) => {
-    // Vite's dev server answers missing files with index.html (200), so check the type too.
-    if (!response.ok || !response.headers.get('content-type')?.startsWith('video/')) return;
-    const container = document.querySelector('#video-container');
-    if (!container) return;
-    const video = document.createElement('video');
-    video.controls = true;
-    video.playsInline = true;
-    video.preload = 'metadata';
-    video.src = videoPath;
-    video.className = 'walkthrough-video';
-    container.replaceWith(video);
-  }).catch(() => { /* The optional video is not present yet. */ });
+  renderSceneTree($('#scene-tree'), app.scene);
 }

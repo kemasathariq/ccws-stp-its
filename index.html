@@ -1,106 +1,103 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#102b31" />
-    <meta name="description" content="Interactive 3D reconstruction concept of CCWS STP ITS." />
-    <link rel="icon" href="data:," />
-    <title>CCWS STP ITS — Interactive 3D Environment</title>
+    <meta name="description" content="Model 3D tampak luar Co-working Space ITS yang dibuat dengan WebGL2 dan GLSL untuk Tugas 2 Grafika Komputer." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f1e1b'/%3E%3Cpath d='M6 15 16 7l10 8' fill='none' stroke='%23c9663f' stroke-width='3'/%3E%3Crect x='9' y='16' width='14' height='9' fill='%23f3efe7'/%3E%3C/svg%3E" />
+    <title>CCWS ITS — Model 3D WebGL</title>
   </head>
   <body>
-    <div class="app-shell">
-      <header class="topbar">
-        <a class="brand" href="#top" aria-label="CCWS STP ITS home">
-          <span class="brand-mark">CC</span>
-          <span><strong>CCWS STP ITS</strong><small>INTERACTIVE INNOVATION HUB</small></span>
-        </a>
-        <div class="topbar-meta"><span class="status-dot"></span> 3D PREVIEW <span class="meta-divider">|</span> TEAM PROJECT</div>
-      </header>
+    <header class="page-header">
+      <h1>Model 3D Co-working Space ITS</h1>
+      <p>Tugas 2 Grafika Komputer · Kelompok <strong>[nama kelompok]</strong> · Kemas Muhammad Athariq (50252411xx) &amp; Gilbran Mahdavikia Raja (5025241134)</p>
+    </header>
 
-      <main id="top">
-        <section class="intro-row">
-          <div>
-            <p class="eyebrow">DIGITAL RECONSTRUCTION PROJECT</p>
-            <h1>Explore the <em>innovation space.</em></h1>
-            <p class="intro-copy">An interactive 3D study of the CCWS STP ITS environment, its collaborative workspace, and selected innovation exhibits.</p>
+    <main>
+      <section aria-labelledby="model-title">
+        <h2 id="model-title">Model 3D</h2>
+        <div class="viewport">
+          <div id="canvas-host" class="canvas-host" aria-label="Model 3D gedung CCWS ITS">
+            <div id="loading-message" class="loading-message">Menyiapkan WebGL…</div>
           </div>
-          <div class="team-chip"><span>PROJECT GROUP</span><strong>CCWS STP ITS Team</strong><small>Member A × Mahda</small></div>
-        </section>
-
-        <section class="workspace-grid" aria-label="3D model and project controls">
-          <div class="viewport-card">
-            <div class="viewport-heading">
-              <div><span class="live-dot"></span><strong>INTERACTIVE 3D CANVAS</strong></div>
-              <span id="render-status" class="render-status">INITIALIZING</span>
+          <div class="viewport-bar">
+            <span id="render-status">Memuat</span>
+            <span class="hint">Seret untuk memutar, gulir untuk zoom</span>
+            <button id="reset-camera" type="button">Atur ulang kamera</button>
+          </div>
+          <div class="controls">
+            <label class="time-control">
+              <span>Waktu</span>
+              <input id="time-of-day" type="range" min="0" max="24" step="0.05" value="16.4" />
+              <output id="time-label">16:24</output>
+            </label>
+            <div class="toggles">
+              <label><input id="auto-time" type="checkbox" /> Siklus siang–malam</label>
+              <label><input id="animate" type="checkbox" checked /> Animasi objek</label>
+              <label><input id="shadows" type="checkbox" checked /> Bayangan</label>
+              <label><input id="textures" type="checkbox" checked /> Tekstur</label>
+              <label><input id="exploded" type="checkbox" /> Urai hierarki</label>
             </div>
-            <div id="canvas-host" class="canvas-host">
-              <div id="loading-message" class="loading-message">Preparing the 3D environment…</div>
-            </div>
-            <div class="viewport-footer">
-              <span class="provisional-note">PROVISIONAL: all dimensions are estimates, not measured</span><span>Mouse: orbit / look around</span><span>Scroll: zoom</span><span>WASD: move in Walk Mode</span>
+            <div class="presets">
+              <span>Sudut kamera</span>
+              <div id="camera-presets" class="preset-buttons"></div>
             </div>
           </div>
+        </div>
+        <p class="note">Model dibuat dengan WebGL2 dan shader GLSL langsung. Animasi: pintu utama dan pintu samping membuka, jendela atas berengsel membuka, tutup tempat sampah, pohon dan palem tertiup angin, serta siang–malam dengan lampu yang menyala. "Urai hierarki" memisahkan atap, fasad, portal, dan kanopi dari induknya. Semua ukuran adalah perkiraan dari foto, belum diukur di lokasi.</p>
+      </section>
 
-          <aside class="control-panel">
-            <div class="panel-section">
-              <p class="eyebrow">NAVIGATION</p>
-              <h2>Camera mode</h2>
-              <div class="segmented-control" role="group" aria-label="Camera mode">
-                <button class="segment active" id="orbit-mode" type="button">Orbit</button>
-                <button class="segment" id="walk-mode" type="button">Walk</button>
-              </div>
-              <button class="secondary-button full-button" id="reset-camera" type="button">Reset camera view</button>
-              <p class="helper-text" id="camera-hint">Orbit around the blockout. Select Walk to enter first-person mode, then click the canvas.</p>
-            </div>
-            <div class="panel-divider"></div>
-            <div class="panel-section">
-              <p class="eyebrow">SCENE LEGEND</p>
-              <h2>Environment zones</h2>
-              <ul class="legend-list">
-                <li><span class="legend-swatch exterior"></span><span><strong>Exterior</strong><small>Building shell and entrance</small></span></li>
-                <li><span class="legend-swatch coworking"></span><span><strong>Co-working</strong><small>Workspace and café</small></span></li>
-                <li><span class="legend-swatch exhibit"></span><span><strong>Innovation exhibit</strong><small>Train, motorcycle, robot arm</small></span></li>
-              </ul>
-            </div>
-            <div class="panel-divider"></div>
-            <div class="panel-section reference-mini-section">
-              <p class="eyebrow">REFERENCE PHOTOS</p>
-              <h2>Real-site comparison</h2>
-              <div class="reference-mini-grid">
-                <img src="/assets/references/photos/01-coworking-sign-exterior.png" alt="Exterior sign reference" />
-                <img src="/assets/references/photos/02-main-facade.png" alt="Main facade reference" />
-                <img src="/assets/references/photos/03-coworking-interior.png" alt="Coworking interior reference" />
-                <img src="/assets/references/photos/04-train-exhibit.png" alt="Train exhibit reference" />
-              </div>
-            </div>
-            <div class="panel-divider"></div>
-            <div class="panel-section progress-section">
-              <p class="eyebrow">DEVELOPMENT STATUS</p>
-              <div class="progress-heading"><strong>Initial blockout</strong><span>Stage 01</span></div>
-              <div class="progress-track"><span></span></div>
-              <p class="helper-text">The current geometry is a placeholder. Replace its proportions after an onsite measurement and full interior walkthrough.</p>
-            </div>
-          </aside>
-        </section>
+      <section aria-labelledby="foto-title">
+        <h2 id="foto-title">Foto asli lokasi</h2>
+        <div class="photo-grid">
+          <figure><a href="/assets/references/photos/eksterior-fasad-serong-kiri.jpg" target="_blank" rel="noopener"><img src="/assets/references/photos/web/eksterior-fasad-serong-kiri.jpg" alt="Fasad utama dari sudut kiri" loading="lazy" /></a><figcaption>Fasad utama, sudut kiri</figcaption></figure>
+          <figure><a href="/assets/references/photos/eksterior-fasad-serong-kanan.jpg" target="_blank" rel="noopener"><img src="/assets/references/photos/web/eksterior-fasad-serong-kanan.jpg" alt="Fasad utama dari sudut kanan" loading="lazy" /></a><figcaption>Fasad utama, sudut kanan</figcaption></figure>
+          <figure><a href="/assets/references/photos/eksterior-coworking-gable-kanopi.jpg" target="_blank" rel="noopener"><img src="/assets/references/photos/web/eksterior-coworking-gable-kanopi.jpg" alt="Sisi gable co-working dengan kanopi" loading="lazy" /></a><figcaption>Sisi co-working dan kanopi</figcaption></figure>
+          <figure><a href="/assets/references/photos/eksterior-kanopi-depan.jpg" target="_blank" rel="noopener"><img src="/assets/references/photos/web/eksterior-kanopi-depan.jpg" alt="Kanopi beton dari depan dengan tempat sampah warna-warni" loading="lazy" /></a><figcaption>Kanopi, depan</figcaption></figure>
+          <figure><a href="/assets/references/photos/eksterior-kanopi-samping.jpg" target="_blank" rel="noopener"><img src="/assets/references/photos/web/eksterior-kanopi-samping.jpg" alt="Kanopi beton dari samping di bawah pohon besar" loading="lazy" /></a><figcaption>Kanopi, samping</figcaption></figure>
+          <figure><a href="/assets/references/photos/lingkungan-pohon-parkir-motor.jpg" target="_blank" rel="noopener"><img src="/assets/references/photos/web/lingkungan-pohon-parkir-motor.jpg" alt="Pohon besar, jalan paving, dan parkir motor" loading="lazy" /></a><figcaption>Lingkungan</figcaption></figure>
+        </div>
+      </section>
 
-        <section class="references-section">
-          <div class="section-heading"><div><p class="eyebrow">REAL-WORLD REFERENCES</p><h2>Reference photographs</h2></div><p>Use these original photos to compare the model's shape, composition, and materials.</p></div>
-          <div class="photo-grid">
-            <figure><img src="/assets/references/photos/01-coworking-sign-exterior.png" alt="CCWS co-working space sign and exterior" /><figcaption><strong>Exterior signage</strong><span>Supplied reference photo 01</span></figcaption></figure>
-            <figure><img src="/assets/references/photos/02-main-facade.png" alt="Building main facade and entrance" /><figcaption><strong>Main facade</strong><span>Supplied reference photo 02</span></figcaption></figure>
-            <figure><img src="/assets/references/photos/03-coworking-interior.png" alt="Co-working interior with tables and chairs" /><figcaption><strong>Co-working interior</strong><span>Supplied reference photo 03</span></figcaption></figure>
-            <figure><img src="/assets/references/photos/04-train-exhibit.png" alt="Train exhibit inside the co-working and innovation space" /><figcaption><strong>Train exhibit</strong><span>Supplied reference photo 04</span></figcaption></figure>
-          </div>
-        </section>
+      <section aria-labelledby="video-title">
+        <h2 id="video-title">Video asli lokasi</h2>
+        <div class="video-grid">
+          <figure>
+            <video controls playsinline preload="metadata" src="/assets/references/videos/20261102_162807.mp4"></video>
+            <figcaption>Dari sisi co-working menuju fasad</figcaption>
+          </figure>
+          <figure>
+            <video controls playsinline preload="metadata" src="/assets/references/videos/20261102_162834.mp4"></video>
+            <figcaption>Sepanjang fasad sampai pintu masuk</figcaption>
+          </figure>
+        </div>
+      </section>
 
-        <section class="video-section">
-          <div><p class="eyebrow">SITE DOCUMENTATION</p><h2>Original walkthrough video</h2><p>Add an original 10–30 second walkthrough video to <code>public/assets/references/videos/site-walkthrough.mp4</code>.</p></div>
-          <div class="video-placeholder" id="video-container"><span class="play-icon">▶</span><span>Walkthrough video will appear here after the team records and adds it.</span></div>
-        </section>
-      </main>
-      <footer class="footer"><span>CCWS STP ITS · Computer Graphics Project</span><span>Three.js · WebGLRenderer · Vite</span></footer>
-    </div>
+      <section aria-labelledby="tree-title">
+        <h2 id="tree-title">Pohon hubungan objek</h2>
+        <p>Dibaca langsung dari scene graph yang dirender. Matriks dunia anak = dunia induk × lokal anak, dengan lokal = T · Rz · Ry · Rx · S. Node bertanda <span class="tag tag-accent">pivot</span> adalah titik putar animasi; <span class="tag">grup</span> adalah node tanpa mesh.</p>
+        <div id="scene-tree" class="scene-tree">
+          <p class="tree-empty">Pohon objek muncul setelah WebGL berjalan.</p>
+        </div>
+      </section>
+
+      <section aria-labelledby="tim-title">
+        <h2 id="tim-title">Pembagian tugas</h2>
+        <table class="roles">
+          <thead>
+            <tr><th scope="col">Anggota</th><th scope="col">NRP</th><th scope="col">Tugas</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Kemas Muhammad Athariq</td><td>50252411xx</td><td>Dasar WebGL: context, shader, buffer, kamera, pencahayaan, dan integrasi.</td></tr>
+            <tr><td>Gilbran Mahdavikia Raja</td><td>5025241134</td><td>Referensi foto dan video, bentuk fasad dan objek lingkungan, tekstur, serta isi halaman utama.</td></tr>
+            <tr><td>Bersama</td><td></td><td>Hierarki dan animasi, penggabungan kode, uji browser, latihan penjelasan, dan pengumpulan.</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <footer class="page-footer">CCWS ITS · Tugas 2 Animasi, Object 3D, Lighting, Texture · WebGL2 · GLSL</footer>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

@@ -5,4 +5,4 @@ import { bindUI } from './ui/bindUI.js';
 const app = createApp(document.querySelector('#canvas-host'));
 bindUI(app);
 
-window.addEventListener('beforeunload', () => app.dispose());
+window.addEventListener('beforeunload', () => app?.dispose());
