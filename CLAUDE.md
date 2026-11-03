@@ -6,6 +6,6 @@ Baca `docs/PROJECT_PLAN.md`, `docs/REQUIREMENTS_TRACEABILITY.md`, dan `docs/THRE
 - Kriteria penilaian: kompleksitas, kemiripan dengan real, pembagian, lighting dan texture, kemampuan menjelaskan, dan kemampuan menyelesaikan challenge. Pemetaannya ada di `docs/REQUIREMENTS_TRACEABILITY.md`.
 - Halaman utama harus memuat nama kelompok, foto dan video asli, canvas dekat foto, pohon hubungan objek, dan pembagian tugas.
 - Jangan perluas target menjadi interior lengkap, robot, kendaraan, kontrol orang pertama, atau sistem interaksi kompleks.
-- Renderer WebGL2 langsung ada di `src/webgl/`, model di `src/models/`, siang–malam dan animasi di `src/world/`. File Three.js lama masih ada dan tidak dipakai; uji di browser sebelum mengklaim fitur selesai.
+- Renderer WebGL2 langsung ada di `src/webgl/`, model di `src/models/`, siang–malam dan animasi di `src/world/`. Jangan memakai library 3D apa pun; uji di browser sebelum mengklaim fitur selesai.
 - Pertahankan foto referensi, tandai ukuran yang belum diukur sebagai perkiraan, dan koordinasikan perubahan file bersama.
 - Jalankan build dan uji browser sesuai perubahan. Laporkan keterbatasan yang masih ada.

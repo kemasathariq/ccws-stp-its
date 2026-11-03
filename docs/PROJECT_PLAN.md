@@ -25,4 +25,4 @@ Interior lengkap, robot, kendaraan, kontrol orang pertama, picking, dan simulasi
 
 ## Kondisi saat ini
 
-Lihat `REQUIREMENTS_TRACEABILITY.md` untuk pemetaan tiap kriteria ke fitur yang sudah dibuat. Yang masih kurang: nama kelompok, dua digit terakhir NRP Kemas, ukuran nyata dari lokasi (semua ukuran masih perkiraan dari foto), dan latihan demo. File Three.js dari scaffold awal masih ada di repo tetapi tidak dipakai.
+Lihat `REQUIREMENTS_TRACEABILITY.md` untuk pemetaan tiap kriteria ke fitur yang sudah dibuat. Yang masih kurang: nama kelompok, dua digit terakhir NRP Kemas, ukuran nyata dari lokasi (semua ukuran masih perkiraan dari foto), dan latihan demo.

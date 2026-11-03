@@ -24,7 +24,7 @@ Parameter URL untuk demo, misalnya `?jam=19.5&kamera=pintuUtama` (lihat `docs/IN
 
 - Semua ukuran adalah perkiraan dari foto, belum diukur di lokasi.
 - Sisi belakang CCWS dibuat sama dengan depan karena tidak ada fotonya.
-- File Three.js dari scaffold awal masih ada di repo tetapi tidak dipakai.
+- Tidak memakai library 3D apa pun; satu-satunya dependensi adalah Vite.
 
 ## Dokumen
 

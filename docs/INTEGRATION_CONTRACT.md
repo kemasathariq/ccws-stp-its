@@ -13,4 +13,4 @@ Struktur kode yang sekarang dipakai:
 
 Material adalah objek biasa: `color`, opsional `texture` (URL atau canvas), `tileSize` (meter per pengulangan), `flatColor` (warna saat tekstur dimatikan), `specular`, `shininess`, `bump`, `reflect`, `emissive` dan `glow`, `emissiveMask`, `alphaTest`, `castShadow`.
 
-Koordinasikan perubahan file bersama. File Three.js dari scaffold awal (`src/core/CameraRig.js`, `src/core/InteractionManager.js`, `src/scene/`, `src/lighting/`, `src/assets/`, `src/models/environment/`, `src/models/exhibits/`) tidak dipakai lagi.
+Koordinasikan perubahan file bersama. Proyek tidak memakai library 3D apa pun; satu-satunya dependensi adalah Vite sebagai server pengembangan.
