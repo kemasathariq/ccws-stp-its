@@ -31,7 +31,7 @@ export function createOrbitCamera(element, initialView) {
   function onWheel(event) {
     event.preventDefault();
     flight = null;
-    state.distance = Math.min(110, Math.max(4, state.distance * Math.exp(event.deltaY * 0.001)));
+    state.distance = Math.min(110, Math.max(1.5, state.distance * Math.exp(event.deltaY * 0.001)));
   }
 
   element.addEventListener('pointerdown', onPointerDown);

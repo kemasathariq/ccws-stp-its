@@ -223,3 +223,23 @@ export function windowGrilleTexture() {
   }
   return canvas;
 }
+
+// Dark walnut-look vinyl planks for the interior floor (interior-lorong-ruang-kerja): four
+// planks across the canvas height, running along the width, with staggered end joints.
+// The colours were picked by eye from the photo, not measured.
+export function woodFloorTexture() {
+  const width = 512;
+  const height = 256;
+  const grain = tileableNoise(31, 8, 3);
+  const fine = tileableNoise(32, 48, 2);
+  const planks = 4;
+  return paint(width, (u, v) => {
+    const row = Math.floor(v * planks);
+    const along = (u + row * 0.37) % 1; // each row is shifted so the joints do not line up
+    const tone = 0.5 + (fine(along * 0.5, v * 4) - 0.5) * 0.9 + (grain(u, v) - 0.5) * 0.5;
+    const seamV = Math.abs((v * planks) % 1 - 0.5) > 0.465;
+    const seamU = along < 0.006 || along > 0.994;
+    const shade = seamV || seamU ? 0.55 : 0.85 + tone * 0.3;
+    return [clamp255(96 * shade), clamp255(62 * shade), clamp255(42 * shade)];
+  }, height);
+}

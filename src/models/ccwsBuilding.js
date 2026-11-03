@@ -1,7 +1,7 @@
 import { cylinder, extrudedPolygon, gablePrism, profilePrism } from '../webgl/geometry.js';
 import { addChildren, createNode } from '../webgl/sceneNode.js';
 import { createTextTexture } from '../webgl/textTexture.js';
-import { boxFrom, cylinderBetween, gableEndProfile, mesh, seededRandom } from './parts.js';
+import { boxFrom, cylinderBetween, gableEndProfile, mesh, seededRandom, slabWithOpenings } from './parts.js';
 import {
   ceilingSlatTexture, concreteTexture, pebbleTexture, plasterTexture, plinthTexture, roofTileTexture, turfTexture,
   windowGrilleTexture,
@@ -16,6 +16,7 @@ export const CCWS_DIMENSIONS = {
   eaveHeight: 7.2,
   ridgeHeight: 9.5,
   plinthHeight: 0.6,
+  wallThickness: 0.3, // estimate; the walls are hollow so the interior can be seen
   // Facade bands, read from the ratio of band heights in eksterior-fasad-serong-*.
   groundWindowBottom: 0.9,
   groundWindowTop: 3.3,
@@ -110,6 +111,34 @@ function sign(name, lines, color, align, ranges, canvasSize, { axis, outward, la
 const mirror = (spans) => [...spans.map(([a, b]) => [-b, -a]).reverse(), ...spans];
 const mirrorValues = (values) => [...values.map((x) => -x).reverse(), ...values];
 
+// Hollow outer walls: four slabs with openings where the facade windows, the entrance and
+// the west side door are. The window and door parts of the facade sit on the outside face and
+// close the openings from outside, so the exterior looks the same as with a solid block;
+// from inside, the openings show the glass (interior.js adds daylight panes and frames).
+export function wallOpenings(withEntrance) {
+  const { groundWindowBottom: gb, groundWindowTop: gt, floorBandTop, fasciaBottom, plinthHeight } = CCWS_DIMENSIONS;
+  const ground = mirror([FACADE.innerBay, FACADE.outerBay]).map(([a, b]) => [a, b, gb, gt]);
+  const upper = [[-FACADE.outerBay[1], -FACADE.outerBay[0]], [-FACADE.innerBay[1], FACADE.innerBay[1]], [FACADE.outerBay[0], FACADE.outerBay[1]]]
+    .map(([a, b]) => [a, b, floorBandTop, fasciaBottom]);
+  if (!withEntrance) return [...ground, ...upper];
+  // Door opening up to the frame head (3.0 m), narrow window columns either side up to 3.3 m.
+  const post = 1.03;
+  return [...ground, ...upper, [-post, post, plinthHeight, 3.0], [-1.95, -post, gb, gt], [post, 1.95, gb, gt]];
+}
+
+function createWalls() {
+  const { length: L, depth: D, eaveHeight, wallThickness: t, plinthHeight } = CCWS_DIMENSIONS;
+  const door = 0.85;
+  const walls = createNode('Walls');
+  walls.children.push(
+    slabWithOpenings('WallFront', [-L / 2, L / 2], [0, eaveHeight], [D / 2 - t, D / 2], wallOpenings(true), MATERIALS.wall),
+    slabWithOpenings('WallBack', [-L / 2, L / 2], [0, eaveHeight], [-D / 2, -D / 2 + t], wallOpenings(false), MATERIALS.wall),
+    slabWithOpenings('WallWest', [-D / 2 + t, D / 2 - t], [0, eaveHeight], [-L / 2, -L / 2 + t], [[-door, door, plinthHeight, 2.65]], MATERIALS.wall, 'x'),
+    boxFrom('WallEast', [L / 2 - t, L / 2], [0, eaveHeight], [-D / 2 + t, D / 2 - t], MATERIALS.wall),
+  );
+  return walls;
+}
+
 function createMainBlock() {
   const { length: L, depth: D, eaveHeight, ridgeHeight } = CCWS_DIMENSIONS;
   // The roof eaves rest on the front edge of the fascia (0.9 m out from each long wall), as in
@@ -127,7 +156,7 @@ function createMainBlock() {
   );
   return addChildren(
     createNode('MainBlock'),
-    boxFrom('Walls', [-L / 2, L / 2], [0, eaveHeight], [-D / 2, D / 2], MATERIALS.wall),
+    createWalls(),
     roof,
     gable('GableWest', -L / 2 + 0.2),
     gable('GableEast', L / 2 - 0.2),
@@ -490,6 +519,7 @@ export function createCcwsBuilding() {
 
   return {
     root,
+    roof, // hidden in the cutaway view
     animated: {
       mainDoors: front.doors,
       sideDoors: coworking.doors,

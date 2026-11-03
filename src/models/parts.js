@@ -49,3 +49,34 @@ export function seededRandom(seed) {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
+
+// Wall slab with rectangular openings, built from the boxes that surround the openings.
+// `along` is the slab's span in the wall's own direction (x for axis 'z', z for axis 'x'),
+// `thickness` its extent across the wall, and each opening is [along0, along1, y0, y1].
+// The slab is cut into horizontal strips at every opening edge; each strip is filled
+// everywhere except where an opening covers its full height.
+export function slabWithOpenings(name, [a0, a1], [y0, y1], thickness, openings, material, axis = 'z') {
+  const edges = [...new Set([y0, y1, ...openings.flatMap(([, , lo, hi]) => [lo, hi])])]
+    .filter((y) => y >= y0 && y <= y1)
+    .sort((p, q) => p - q);
+  const group = createNode(name);
+  let count = 0;
+  for (let i = 0; i < edges.length - 1; i += 1) {
+    const [lo, hi] = [edges[i], edges[i + 1]];
+    const holes = openings
+      .filter(([, , oLo, oHi]) => oLo <= lo && oHi >= hi)
+      .map(([h0, h1]) => [h0, h1])
+      .sort((p, q) => p[0] - q[0]);
+    let cursor = a0;
+    for (const [h0, h1] of [...holes, [a1, a1]]) {
+      if (h0 > cursor + 1e-6) {
+        const span = [cursor, h0];
+        const ranges = axis === 'z' ? [span, [lo, hi], thickness] : [thickness, [lo, hi], span];
+        group.children.push(boxFrom(`${name}Piece${count}`, ...ranges, material));
+        count += 1;
+      }
+      cursor = Math.max(cursor, h1);
+    }
+  }
+  return group;
+}

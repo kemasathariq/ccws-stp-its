@@ -7,7 +7,10 @@
 3. **Animasi dan pivot.** Matikan "Urai hierarki", dekati pintu masuk. Jelaskan bahwa pintu berputar pada pivot di engsel, daun jendela atas berputar pada engsel atas (sumbu X), dan tutup tempat sampah berputar pada engsel belakang (sumbu Z).
 4. **Lighting.** Geser slider "Waktu" dari pagi ke malam: arah dan warna matahari berubah, bayangan bergeser, lalu malam hari lampu portal dan kanopi menyala dan jendela bercahaya. Matikan dan nyalakan "Bayangan" untuk menunjukkan shadow map.
 5. **Tekstur.** Matikan "Tekstur": bahan bertekstur kembali ke warna rata-ratanya. Jelaskan tekstur gambar (paving dari foto), tekstur prosedural, bump, dan alpha test pada huruf.
-6. **Pembagian tugas.** Tiap anggota menjelaskan bagiannya sesuai tabel di halaman.
+6. **Interior dan pameran.** Klik "Interior: lorong", "Interior: ruang kerja", dan "Interior: kafe" lalu bandingkan dengan foto interior di halaman. Klik "Potongan (atap dibuka)" untuk melihat tata letak dari atas, lalu centang kembali atap.
+7. **Lengan robot.** Klik "Pameran" lalu "Lengan robot". Geser slider satu per satu dan tunjukkan bahwa sendi di bawahnya ikut bergerak (hierarki). Klik "Pose siap", "Pose ambil", "Ambil kotak", ubah putar dasar dan bahu, "Lepas kotak", lalu "Reset pose". Jelaskan pivot dan perkalian induk × lokal.
+8. **Motor dan kereta.** Klik "Motor listrik", centang "Daya menyala": kedua roda berputar pada poros, rangka diam. Pada kereta, buka pintu dan nyalakan layar dan lampu jendela. Geser "Waktu" ke malam untuk melihat lampu ruangan dan jendela.
+9. **Pembagian tugas.** Tiap anggota menjelaskan bagiannya sesuai tabel di halaman.
 
 Parameter URL mempercepat demo, misalnya `?jam=19.5&kamera=pintuUtama` atau `?urai=1&kamera=hierarki`.
 
@@ -25,5 +28,11 @@ Parameter URL mempercepat demo, misalnya `?jam=19.5&kamera=pintuUtama` atau `?ur
 | Ubah ukuran gedung | `CCWS_DIMENSIONS` di `ccwsBuilding.js`; lingkungan mengikuti karena posisinya relatif terhadap ujung gedung |
 | Matikan specular atau ambient | Ubah baris `specular` atau `ambient` di `LIT_FS` (`renderer.js`) |
 | Ubah FOV atau posisi kamera | `CAMERA_PRESETS` di `src/world/cameraPresets.js` |
+| Ubah batas sudut sendi robot | `ROBOT_CONFIG.limits` di `src/models/exhibits/robotArm.js` (slider mengikuti otomatis) |
+| Ubah panjang lengan robot atau besar kotak | `upperArm`, `forearm`, `boxSize` di `ROBOT_CONFIG` (pose ambil perlu dihitung ulang) |
+| Percepat roda motor | `spinSpeed` dan `acceleration` di `MOTORCYCLE_CONFIG` |
+| Ubah ukuran atau letak kereta | `TRAIN_CONFIG` dan `EXHIBITION_LAYOUT` (`src/models/exhibition.js`) |
+| Tambah meja atau kursi | Tambah entri di `WORKSPACE_LAYOUT.tables` (`src/models/furniture.js`) |
+| Ubah warna atau kuat lampu interior | `lightColor`, `lightIntensity`, `lightRange` dan daftar posisi di `INTERIOR_LAYOUT` |
 
 Latihan: masing-masing anggota mencoba setiap baris di tabel ini minimal sekali, menjalankan `npm run dev`, dan menjelaskan efeknya. Gunakan hanya fitur yang sudah diuji; jangan menyatakan fitur yang belum dibuat seolah sudah bekerja.

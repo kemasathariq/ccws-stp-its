@@ -1,6 +1,6 @@
 # Foto referensi
 
-Folder ini berisi foto yang telah disediakan tim. Pilih foto asli yang sesuai dengan objek scene dan tampilkan di dekat canvas pada halaman utama. Gunakan foto sebagai acuan bentuk dan kemiripan; foto interior dan exhibit tidak dimodelkan karena scope proyek adalah tampak luar.
+Folder ini berisi foto yang telah disediakan tim. Pilih foto asli yang sesuai dengan objek scene dan tampilkan di dekat canvas pada halaman utama. Gunakan foto sebagai acuan bentuk dan kemiripan; foto interior dan exhibit dipakai sebagai acuan interior sederhana dan pameran.
 
 Nama file mengikuti pola `kategori-subjek-sudut`.
 

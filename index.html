@@ -3,21 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Model 3D tampak luar Co-working Space ITS yang dibuat dengan WebGL2 dan GLSL untuk Tugas 2 Grafika Komputer." />
+    <meta name="description" content="Model 3D Co-working Space ITS (tampak luar, interior, dan pameran inovasi) yang dibuat dengan WebGL2 dan GLSL untuk Tugas 2 Grafika Komputer." />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f1e1b'/%3E%3Cpath d='M6 15 16 7l10 8' fill='none' stroke='%23c9663f' stroke-width='3'/%3E%3Crect x='9' y='16' width='14' height='9' fill='%23f3efe7'/%3E%3C/svg%3E" />
     <title>CCWS ITS — Model 3D WebGL</title>
   </head>
   <body>
     <header class="page-header">
       <h1>Model 3D Co-working Space ITS</h1>
-      <p>Tugas 2 Grafika Komputer · Kelompok <strong>[nama kelompok]</strong> · Kemas Muhammad Athariq (50252411xx) &amp; Gilbran Mahdavikia Raja (5025241134)</p>
+      <p>Tugas 2 Grafika Komputer · Kelompok <strong>Wengker</strong> · Kemas Muhammad Athariq (5025241102) &amp; Gilbran Mahdavikia Raja (5025241134)</p>
     </header>
 
     <main>
       <section aria-labelledby="model-title">
         <h2 id="model-title">Model 3D</h2>
         <div class="viewport">
-          <div id="canvas-host" class="canvas-host" aria-label="Model 3D gedung CCWS ITS">
+          <div id="canvas-host" class="canvas-host" aria-label="Model 3D gedung CCWS ITS, interior, dan pameran">
             <div id="loading-message" class="loading-message">Menyiapkan WebGL…</div>
           </div>
           <div class="viewport-bar">
@@ -37,14 +37,46 @@
               <label><input id="shadows" type="checkbox" checked /> Bayangan</label>
               <label><input id="textures" type="checkbox" checked /> Tekstur</label>
               <label><input id="exploded" type="checkbox" /> Urai hierarki</label>
+              <label><input id="interior-lights" type="checkbox" checked /> Lampu ruang kerja</label>
+              <label><input id="exhibit-lights" type="checkbox" checked /> Lampu pameran</label>
+              <label><input id="cutaway" type="checkbox" /> Buka atap (potongan)</label>
             </div>
             <div class="presets">
               <span>Sudut kamera</span>
               <div id="camera-presets" class="preset-buttons"></div>
             </div>
+            <div class="presets">
+              <span>Interior dan pameran</span>
+              <div id="camera-presets-interior" class="preset-buttons"></div>
+            </div>
+            <div class="exhibit-controls" aria-label="Kontrol pameran">
+              <fieldset id="robot-controls">
+                <legend>Lengan robot</legend>
+                <div id="robot-sliders" class="slider-list"></div>
+                <div class="button-row">
+                  <button id="robot-ready" type="button">Pose siap</button>
+                  <button id="robot-pick-pose" type="button">Pose ambil</button>
+                  <button id="robot-grab" type="button" aria-pressed="false">Ambil kotak</button>
+                  <button id="robot-reset-box" type="button">Kembalikan kotak</button>
+                  <button id="robot-reset" type="button">Reset pose</button>
+                </div>
+                <p id="robot-status" class="status-text" role="status" aria-live="polite">Gerakkan sendi dengan slider. Dekatkan gripper ke kotak biru (kotak menyala bila terjangkau), lalu tekan "Ambil kotak".</p>
+              </fieldset>
+              <fieldset>
+                <legend>Motor listrik</legend>
+                <label class="switch"><input id="moto-power" type="checkbox" /> Daya menyala</label>
+                <p id="moto-status" class="status-text">Mati: roda diam, lampu padam.</p>
+              </fieldset>
+              <fieldset>
+                <legend>Mockup kereta</legend>
+                <label class="switch"><input id="train-door" type="checkbox" /> Pintu terbuka</label>
+                <label class="switch"><input id="train-lights" type="checkbox" /> Layar tujuan dan lampu jendela</label>
+                <p id="train-status" class="status-text">Pintu tertutup, layar dan lampu padam.</p>
+              </fieldset>
+            </div>
           </div>
         </div>
-        <p class="note">Model dibuat dengan WebGL2 dan shader GLSL langsung. Animasi: pintu utama dan pintu samping membuka, jendela atas berengsel membuka, tutup tempat sampah, pohon dan palem tertiup angin, serta siang–malam dengan lampu yang menyala. "Urai hierarki" memisahkan atap, fasad, portal, dan kanopi dari induknya. Semua ukuran adalah perkiraan dari foto, belum diukur di lokasi.</p>
+        <p class="note">Model dibuat dengan WebGL2 dan shader GLSL langsung, tanpa library 3D. Tampak luar: pintu utama dan pintu samping membuka, jendela atas berengsel membuka, tutup tempat sampah, pohon dan palem tertiup angin, serta siang–malam. Interior dan pameran: ruang kerja, kafe, mockup kereta, motor listrik, dan lengan robot yang dapat dikendalikan lewat kontrol di atas. "Urai hierarki" memisahkan bagian gedung dari induknya; "Buka atap" memperlihatkan isi ruangan dari atas. Semua ukuran dan tata letak adalah perkiraan dari foto, belum diukur di lokasi.</p>
       </section>
 
       <section aria-labelledby="foto-title">
@@ -56,6 +88,10 @@
           <figure><a href="/assets/references/photos/eksterior-kanopi-depan.jpg" target="_blank" rel="noopener"><img src="/assets/references/photos/web/eksterior-kanopi-depan.jpg" alt="Kanopi beton dari depan dengan tempat sampah warna-warni" loading="lazy" /></a><figcaption>Kanopi, depan</figcaption></figure>
           <figure><a href="/assets/references/photos/eksterior-kanopi-samping.jpg" target="_blank" rel="noopener"><img src="/assets/references/photos/web/eksterior-kanopi-samping.jpg" alt="Kanopi beton dari samping di bawah pohon besar" loading="lazy" /></a><figcaption>Kanopi, samping</figcaption></figure>
           <figure><a href="/assets/references/photos/lingkungan-pohon-parkir-motor.jpg" target="_blank" rel="noopener"><img src="/assets/references/photos/web/lingkungan-pohon-parkir-motor.jpg" alt="Pohon besar, jalan paving, dan parkir motor" loading="lazy" /></a><figcaption>Lingkungan</figcaption></figure>
+          <figure><a href="/assets/references/photos/interior-lorong-ruang-kerja.jpg" target="_blank" rel="noopener"><img src="/assets/references/photos/web/interior-lorong-ruang-kerja.jpg" alt="Ruang kerja memanjang dengan meja, kafe di kiri, dan mockup kereta di ujung" loading="lazy" /></a><figcaption>Interior, lorong ruang kerja</figcaption></figure>
+          <figure><a href="/assets/references/photos/interior-ruang-kerja-mural.png" target="_blank" rel="noopener"><img src="/assets/references/photos/web/interior-ruang-kerja-mural.jpg" alt="Ruang kerja dengan mural kutipan dan meja kuning" loading="lazy" /></a><figcaption>Interior, mural dan meja kerja</figcaption></figure>
+          <figure><a href="/assets/references/photos/interior-meja-kasir-kantin.jpg" target="_blank" rel="noopener"><img src="/assets/references/photos/web/interior-meja-kasir-kantin.jpg" alt="Meja kasir kafe dengan keranjang camilan dan banner menu" loading="lazy" /></a><figcaption>Interior, meja kasir dan kafe</figcaption></figure>
+          <figure><a href="/assets/references/photos/interior-pameran-kereta.png" target="_blank" rel="noopener"><img src="/assets/references/photos/web/interior-pameran-kereta.jpg" alt="Mockup kereta merah dan abu-abu bertuliskan HST 01 JAKARTA" loading="lazy" /></a><figcaption>Pameran, mockup kereta</figcaption></figure>
         </div>
       </section>
 
@@ -73,6 +109,27 @@
         </div>
       </section>
 
+      <section aria-labelledby="kontrol-title">
+        <h2 id="kontrol-title">Cara memakai</h2>
+        <ul class="plain-list">
+          <li><strong>Kamera:</strong> seret untuk memutar, gulir untuk zoom. Tombol "Sudut kamera" menyamakan sudut pandang dengan foto; "Interior dan pameran" masuk ke dalam gedung.</li>
+          <li><strong>Lengan robot:</strong> geser slider sendi (putar dasar, bahu, siku, pergelangan, gripper). "Pose ambil" membawa gripper ke kotak biru; saat kotak menyala, tekan "Ambil kotak", gerakkan lengan, lalu "Lepas kotak". "Reset pose" mengembalikan sendi ke pose awal.</li>
+          <li><strong>Motor listrik:</strong> centang "Daya menyala" agar kedua roda berputar dan lampu menyala. <strong>Kereta:</strong> pintu dapat dibuka dan layar tujuan serta lampu jendela dinyalakan.</li>
+          <li><strong>Cahaya:</strong> slider "Waktu" dan siklus siang–malam, lampu ruang kerja dan pameran dapat dimatikan, serta "Bayangan" dan "Tekstur" dapat dimatikan untuk perbandingan.</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="teknik-title">
+        <h2 id="teknik-title">Teknik grafika yang dipakai</h2>
+        <ul class="plain-list">
+          <li><strong>WebGL2 langsung:</strong> context, shader GLSL ES 3.00, VAO dan buffer ditangani sendiri di <code>src/webgl/renderer.js</code>; tidak ada library 3D.</li>
+          <li><strong>Hierarki:</strong> matriks dunia anak = matriks dunia induk × matriks lokal. Pintu, roda, dan sendi lengan robot adalah simpul pivot di engsel, poros, atau pusat sendi, sehingga memutar satu pivot ikut memutar semua anaknya.</li>
+          <li><strong>Pencahayaan:</strong> ambient hemisfer, matahari/bulan (Lambert + Blinn-Phong), bayangan shadow map dengan PCF, delapan lampu titik (lampu luar, lampu langit-langit ruang kerja dan pameran), kaca memantulkan langit, serta cahaya siang pada jendela dari dalam.</li>
+          <li><strong>Tekstur:</strong> foto paving tim, tekstur prosedural (plester, genteng, teralis, lantai kayu), bump mapping dari kecerahan tekstur, dan huruf alpha-test (papan nama, kutipan mural, layar kereta).</li>
+          <li><strong>Animasi:</strong> berbasis waktu (delta time), sehingga kecepatan sama di semua komputer.</li>
+        </ul>
+      </section>
+
       <section aria-labelledby="tree-title">
         <h2 id="tree-title">Pohon hubungan objek</h2>
         <p>Dibaca langsung dari scene graph yang dirender. Matriks dunia anak = dunia induk × lokal anak, dengan lokal = T · Rz · Ry · Rx · S. Node bertanda <span class="tag tag-accent">pivot</span> adalah titik putar animasi; <span class="tag">grup</span> adalah node tanpa mesh.</p>
@@ -88,8 +145,8 @@
             <tr><th scope="col">Anggota</th><th scope="col">NRP</th><th scope="col">Tugas</th></tr>
           </thead>
           <tbody>
-            <tr><td>Kemas Muhammad Athariq</td><td>50252411xx</td><td>Dasar WebGL: context, shader, buffer, kamera, pencahayaan, dan integrasi.</td></tr>
-            <tr><td>Gilbran Mahdavikia Raja</td><td>5025241134</td><td>Referensi foto dan video, bentuk fasad dan objek lingkungan, tekstur, serta isi halaman utama.</td></tr>
+            <tr><td>Kemas Muhammad Athariq</td><td>5025241102</td><td>Dasar WebGL: context, shader, buffer, kamera, pencahayaan, dan integrasi. Lengan robot: hierarki pivot, kontrol sendi dengan batas sudut, dan ambil–lepas kotak.</td></tr>
+            <tr><td>Gilbran Mahdavikia Raja</td><td>5025241134</td><td>Referensi foto dan video, bentuk fasad dan objek lingkungan, tekstur, serta isi halaman utama. Interior dan pameran: cangkang ruangan, furnitur, konter kafe, mockup kereta, dan motor listrik.</td></tr>
             <tr><td>Bersama</td><td></td><td>Hierarki dan animasi, penggabungan kode, uji browser, latihan penjelasan, dan pengumpulan.</td></tr>
           </tbody>
         </table>

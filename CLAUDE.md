@@ -1,11 +1,13 @@
 # Petunjuk proyek
 
-Baca `docs/PROJECT_PLAN.md`, `docs/REQUIREMENTS_TRACEABILITY.md`, dan `docs/THREE_WEEK_ROADMAP.md` sebelum mengubah proyek. Naskah tugas menyebut tiga minggu; tim memakai jadwal tiga bulan agar model sedetail mungkin dan semua kriteria penilaian terpenuhi.
+Baca `docs/PROJECT_PLAN.md`, `docs/REQUIREMENTS_TRACEABILITY.md`, dan `docs/THREE_WEEK_ROADMAP.md` sebelum mengubah proyek. Naskah tugas menyebut **tiga minggu** dan maksimal dua anggota.
 
-- Target: scene tampak luar gedung CCWS ITS yang sedetail dan semirip mungkin dengan foto, dibuat dengan API WebGL langsung dan shader GLSL. Fokus utama gedung CCWS; lingkungan cukup sebagai konteks.
+- Target: scene CCWS ITS dari luar (sudah ada) ditambah interior sederhana dan pameran inovasi (kereta, motor listrik, lengan robot) yang dapat dikenali, dengan beberapa interaksi bermakna. Semuanya dibuat dengan WebGL2 langsung dan shader GLSL ES 3.00.
 - Kriteria penilaian: kompleksitas, kemiripan dengan real, pembagian, lighting dan texture, kemampuan menjelaskan, dan kemampuan menyelesaikan challenge. Pemetaannya ada di `docs/REQUIREMENTS_TRACEABILITY.md`.
 - Halaman utama harus memuat nama kelompok, foto dan video asli, canvas dekat foto, pohon hubungan objek, dan pembagian tugas.
-- Jangan perluas target menjadi interior lengkap, robot, kendaraan, kontrol orang pertama, atau sistem interaksi kompleks.
-- Renderer WebGL2 langsung ada di `src/webgl/`, model di `src/models/`, siang–malam dan animasi di `src/world/`. Jangan memakai library 3D apa pun; uji di browser sebelum mengklaim fitur selesai.
-- Pertahankan foto referensi, tandai ukuran yang belum diukur sebagai perkiraan, dan koordinasikan perubahan file bersama.
-- Jalankan build dan uji browser sesuai perubahan. Laporkan keterbatasan yang masih ada.
+- Tidak ada library 3D (Three.js, Babylon.js, dsb.). Vite hanya server pengembangan dan alat build. Jangan menambah dependensi tanpa alasan jelas.
+- Renderer WebGL2 ada di `src/webgl/` dan satu-satunya pemilik state WebGL. Model di `src/models/` hanya membuat simpul scene dan geometri (tidak membuat context atau loop animasi sendiri). Siang–malam dan animasi di `src/world/`. Satu loop `requestAnimationFrame` di `src/core/createApp.js`.
+- Bagian yang bergerak memakai simpul pivot di sendi/engsel/poros. Matriks dunia = matriks dunia induk × matriks lokal.
+- Di luar target: kontrol orang pertama dengan tabrakan, fisika, dan mode multipemain. Picking dengan mouse hanya jika mudah dan tidak mengubah arsitektur renderer.
+- Ukuran yang belum diukur adalah perkiraan; denah interior bersifat konseptual. Pertahankan foto dan video referensi; jangan memakai model 3D eksternal atau gambar sebagai pengganti pemodelan.
+- Jalankan build dan uji browser sesuai perubahan. Jangan menyatakan fitur selesai sebelum diuji; laporkan keterbatasan yang masih ada.

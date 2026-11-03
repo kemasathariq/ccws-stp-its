@@ -1,8 +1,8 @@
 # Referensi dan Asumsi Lokasi
 
-Gunakan foto asli fasad yang tersedia sebagai acuan utama bentuk bangunan, pintu, jendela, dan lingkungan. Foto interior dan exhibit yang tersedia tetap dapat disimpan sebagai arsip, tetapi tidak dimodelkan karena scope proyek adalah tampak luar.
+Gunakan foto asli fasad yang tersedia sebagai acuan utama bentuk bangunan, pintu, jendela, dan lingkungan. Foto interior dan exhibit dipakai sebagai acuan interior sederhana dan pameran (lihat `FLOOR_PLAN.md` untuk bukti dan asumsi tiap elemen).
 
-Menurut informasi tim, mockup gerbong kereta di dalam CCWS memakan sekitar 3/7 panjang ruangan dan hampir selebar ruangan, dengan sedikit ruang kosong di sampingnya untuk melihat bagian depan mockup (lihat `interior-lorong-ruang-kerja.jpg` dan `interior-pameran-kereta.png`). Porsi 3/7 ini perkiraan, bukan hasil pengukuran. Mockup berada di dalam bangunan, sehingga tidak termasuk target pemodelan tampak luar.
+Menurut informasi tim, mockup gerbong kereta di dalam CCWS memakan sekitar 3/7 panjang ruangan dan hampir selebar ruangan, dengan sedikit ruang kosong di sampingnya untuk melihat bagian depan mockup (lihat `interior-lorong-ruang-kerja.jpg` dan `interior-pameran-kereta.png`). Porsi 3/7 ini perkiraan, bukan hasil pengukuran. Mockup berada di dalam bangunan dan dimodelkan di `src/models/exhibits/train.js` dengan ukuran perkiraan (3/7 itu ambigu, jadi panjang dan kedalaman dibuat dapat diatur).
 
 Informasi tata letak dari tim: di belakang CCWS ada satu gedung dua lantai yang sejajar, memanjang dari bangunan berbalkon di barat kanopi sampai ujung gedung kecil beratap genteng di sisi timur, dan tersambung ke bagian tengah sisi belakang CCWS lewat penghubung satu lantai (pasangan dari portal pintu masuk di depan). Gedung kecil di timur adalah bangunan terpisah satu lantai. Gedung belakang dan gedung kecil di timur dimodelkan polos (dinding putih dan atap pelana genteng) karena fokus proyek adalah CCWS; jaraknya ke CCWS adalah perkiraan.
 
@@ -17,3 +17,5 @@ Pembagian tanah mengikuti foto: paving herringbone di sekitar gedung, di bawah d
 Foto tidak menunjukkan ukuran pasti atau seluruh sisi bangunan. Gunakan perkiraan yang masuk akal dan jangan menyebutnya sebagai hasil pengukuran. Jika memungkinkan, ambil sudut foto tambahan dan rekam video asli lokasi untuk halaman pengumpulan.
 
 Catat sumber bahan yang digunakan di `docs/ASSET_REGISTER.md`. Gerakan animasi adalah interpretasi untuk demonstrasi jika tidak ada bukti bahwa objek aslinya bergerak demikian.
+
+Interior: dinding gedung dibuat berongga setebal 0,3 m (perkiraan) dengan bukaan sebesar bidang jendela fasad; tinggi plafon 6,6 m dan semua tata letak dalam adalah perkiraan. Foto tidak memperlihatkan motor listrik maupun lengan robot, jadi keduanya generik dan harus dicocokkan dengan pameran asli. Tulisan "HST JAKARTA" pada kereta tidak dianggap bukti bahwa itu pameran Whoosh.

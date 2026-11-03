@@ -13,4 +13,16 @@ Struktur kode yang sekarang dipakai:
 
 Material adalah objek biasa: `color`, opsional `texture` (URL atau canvas), `tileSize` (meter per pengulangan), `flatColor` (warna saat tekstur dimatikan), `specular`, `shininess`, `bump`, `reflect`, `emissive` dan `glow`, `emissiveMask`, `alphaTest`, `castShadow`.
 
+Model interior dan pameran mengikuti pola yang sama dengan tambahan antarmuka kendali:
+
+| Modul | Mengembalikan |
+|---|---|
+| `createInterior()` | `root`, `ceiling` (untuk potongan), `workspaceLights`, `exhibitionLights`, `setWorkspaceLights(on)`, `setExhibitionLights(on)` |
+| `createTrain()` | `root`, `update(delta)`, `setDoorOpen(on)`, `setLightsOn(on)`, `state()` |
+| `createMotorcycle()` | `root`, `update(delta, { spin })`, `setPowered(on)`, `state()` |
+| `createRobotArm()` | `root`, `update(delta)`, `setJoint(name, nilai)`, `setPose`, `resetPose`, `pickPose`, `grab()` (ambil atau lepas), `resetCube`, `getTarget`, `getCurrent`, `isHolding` |
+| `createExhibition()` | `root`, `train`, `motorcycle`, `robot`, `update(delta, { animate })` |
+
+Model tidak mengimpor UI; `src/ui/bindUI.js` memanggil metode di atas lewat `app.exhibits`. Lampu titik interior diteruskan ke renderer oleh `createApp.js` (maksimal 8 sekaligus). Properti material tambahan: `glowAlways` (menyala terus) dan `glowDay` (menyala hanya siang). Simpul dengan `visible = false` tidak digambar.
+
 Koordinasikan perubahan file bersama. Proyek tidak memakai library 3D apa pun; satu-satunya dependensi adalah Vite sebagai server pengembangan.

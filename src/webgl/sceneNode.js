@@ -11,7 +11,10 @@ export function addChildren(parent, ...children) {
   return parent;
 }
 
+// A node with `visible === false` is skipped together with its whole subtree (used for the
+// roof cutaway); it still stays in the scene graph and the scene tree.
 export function traverse(node, parentWorld, visit) {
+  if (node.visible === false) return;
   const world = multiply(parentWorld, compose(node.position, node.rotation, node.scale));
   visit(node, world);
   for (const child of node.children) traverse(child, world, visit);

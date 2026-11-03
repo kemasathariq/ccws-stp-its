@@ -212,10 +212,99 @@ button:hover {
   font-size: 0.82rem;
 }
 
+/* Exhibit controls */
+.exhibit-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.exhibit-controls fieldset {
+  margin: 0;
+  padding: 10px 12px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-width: 0;
+}
+
+.exhibit-controls legend {
+  padding: 0 6px;
+  font-weight: 600;
+}
+
+#robot-controls {
+  grid-column: span 2;
+}
+
+.slider-list {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.slider-row {
+  display: grid;
+  grid-template-columns: 7.5em minmax(0, 1fr) 3.6em;
+  align-items: center;
+  gap: 8px;
+}
+
+.slider-row input {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.slider-row output {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+button[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+
+.switch input {
+  accent-color: var(--accent);
+}
+
+.status-text {
+  margin: 8px 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
 .note {
   margin: 12px 0 0;
   font-size: 0.85rem;
   color: var(--muted);
+}
+
+/* Usage and technique lists */
+.plain-list {
+  margin: 0;
+  padding-left: 1.2em;
+  max-width: 78ch;
+}
+
+.plain-list li {
+  margin-bottom: 6px;
 }
 
 /* Photos and videos */
@@ -344,6 +433,14 @@ section > p .tag {
 }
 
 @media (max-width: 800px) {
+  #robot-controls {
+    grid-column: auto;
+  }
+
+  .slider-row {
+    grid-template-columns: 6.5em minmax(0, 1fr) 3.2em;
+  }
+
   .photo-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

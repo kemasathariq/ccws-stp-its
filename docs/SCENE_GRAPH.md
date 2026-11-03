@@ -1,6 +1,6 @@
 # Pohon Hubungan Objek
 
-Pohon lengkap ditampilkan otomatis di halaman utama (bagian "Pohon hubungan objek"), dibaca langsung dari scene graph yang dirender (`src/ui/renderSceneTree.js`). Ringkasan di bawah mengikuti `src/models/ccwsBuilding.js` dan `src/models/environment.js`; node sejenis diringkas, dan `→` berarti "induk dari".
+Pohon lengkap (tampak luar, interior, dan pameran) ditampilkan otomatis di halaman utama (bagian "Pohon hubungan objek"), dibaca langsung dari scene graph yang dirender (`src/ui/renderSceneTree.js`). Ringkasan di bawah mengikuti `src/models/ccwsBuilding.js` dan `src/models/environment.js`; node sejenis diringkas, dan `→` berarti "induk dari".
 
 ```text
 Scene
@@ -43,8 +43,39 @@ Scene
             └── BinRack → Shelf, Leg…, RailBack, PedalBin0..2 → Body, LidPivot → Lid, Knob
 ```
 
+Interior dan pameran (`src/models/interior.js`, `furniture.js`, `cafeCounter.js`, `exhibition.js`, `exhibits/*.js`) adalah anak `Scene` yang sejajar dengan `CCWS`:
+
+```text
+Scene
+├── Interior
+│   ├── FloorAndZones        Floor (kayu), ExhibitionZoneFloor, EntranceMat, ExhibitionWallPanel
+│   ├── CeilingAndBeams      Ceiling, Beam0..5                (disembunyikan saat "Buka atap")
+│   ├── WindowBays           FrontBay…/BackBay… → Pane, Frame…, Mullion…, Rail…; SideDoorBay
+│   ├── WallBands, Mural     pita krem, kutipan (alpha test), lingkaran awan
+│   ├── LightFixtures        Strip…, TrackNorth/South → Rail, Head…, Lens…
+│   ├── WorkspaceFurniture   → Tables → Table0..7 → Top, Leg…, Stretcher, Screen
+│   │                        → Chairs → Chair0..21 → Post, BaseA/B, Seat, Back, BackSupport
+│   │                        → Sofas → SofaSouth/West, LoungeRug, LoungeTable
+│   └── Cafe                 → Counter → FrontCounter/ReturnCounter/BackCounter (→ Crate…, CoffeeMachine, Sink, Kettle)
+│                            → Shelves, Fridges, MenuBanner
+├── CCWS
+│   └── MainBlock → Walls → WallFront, WallBack, WallWest, WallEast   (dinding berongga dengan bukaan jendela dan pintu)
+└── InnovationExhibition
+    ├── TrainExhibitRoot     → MainCarriageBody, Roof, WindowGroups → Window0..1, DoorAssembly → DoorSlidePivot → DoorPanel,
+    │                          DestinationDisplay (layar, nomor, pelat)
+    ├── MotorcycleRoot       → DisplayPlatform, MotorcycleFrame → Chassis, BatteryPack, BodyPanels, Seat, HandlebarAssembly,
+    │                          FrontFork, Swingarm, FrontWheelPivot → Tire, Rim, Hub, Spoke0..4, RearWheelPivot → …
+    └── RobotArmRoot         → DisplayPlatform, PickableBox (anak GripperRoot saat dipegang)
+                             → BaseVisual → BaseYawPivot → TurntableVisual → ShoulderPivot → UpperArmVisual
+                               → ElbowPivot → ForearmVisual → WristPivot → GripperRoot → PalmVisual,
+                                 LeftFingerPivot → LeftFingerVisual, RightFingerPivot → RightFingerVisual
+```
+
+Jumlah saat ini (dibaca dari scene yang berjalan): ±1.875 simpul dan ±1.540 mesh (Environment 209 simpul, CCWS 957, Interior 590, InnovationExhibition 119).
+
 Matriks dunia anak = matriks dunia induk × matriks lokal anak, dengan matriks lokal = T · Rz · Ry · Rx · S (`src/webgl/mat4.js`, `src/webgl/sceneNode.js`).
 
 - **Induk menggerakkan anak.** Menggeser `FrontFacade` atau `CoworkingEnd` ikut menggeser seluruh anaknya; inilah yang ditunjukkan tombol "Urai hierarki".
 - **Satu fungsi, dua fasad.** `FrontFacade` dan `BackFacade` dibuat oleh fungsi yang sama; `BackFacade` hanya berbeda translasi dan rotasinya. Sisi belakang dibuat sama dengan depan berdasarkan informasi tim, karena tidak ada foto sisi belakang.
-- **Pivot.** Setiap simpul `…Pivot` diletakkan di engsel atau poros. Animator hanya mengubah rotasi pivot itu (`src/world/animator.js`).
+- **Pivot.** Setiap simpul `…Pivot` diletakkan di engsel, poros roda, atau pusat sendi robot. Animator hanya mengubah rotasi pivot itu (`src/world/animator.js`).
+- **Atap dibuka.** Simpul dengan `visible = false` dilewati renderer beserta seluruh anaknya (`traverse`); dipakai untuk `RoofGroup` dan `CeilingAndBeams`.

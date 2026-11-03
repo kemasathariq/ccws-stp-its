@@ -486,7 +486,8 @@ export function createRenderer(canvas, { shadowCenter = [0, 0, 0], shadowRadius 
       gl.uniform1f(u.uBump, material.bump ?? 0);
       gl.uniform1f(u.uReflect, material.reflect ?? 0);
       const glow = material.glow ?? 0;
-      const level = material.glowAlways ? 1 : environment.lampLevel;
+      // glowAlways: constant; glowDay: only by day (window panes seen from inside); default: lamps at night.
+      const level = material.glowAlways ? 1 : material.glowDay ? 1 - environment.lampLevel : environment.lampLevel;
       const emissive = material.emissive ?? [0, 0, 0];
       gl.uniform3f(u.uEmissive, emissive[0] * glow * level, emissive[1] * glow * level, emissive[2] * glow * level);
       gl.uniform1i(u.uEmissiveMask, material.emissiveMask ? 1 : 0);
