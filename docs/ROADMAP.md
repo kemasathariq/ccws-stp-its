@@ -1,6 +1,6 @@
 # Jadwal
 
-Naskah tugas memberi waktu **tiga minggu**. Nama file ini dipertahankan agar tautan lama tetap berfungsi. Pembagian minggu di bawah adalah jadwal internal tim, bukan ketentuan dosen.
+Naskah tugas memberi waktu **tiga minggu**. Pembagian minggu di bawah adalah jadwal internal tim, bukan ketentuan dosen.
 
 | Minggu | Pekerjaan |
 |---|---|

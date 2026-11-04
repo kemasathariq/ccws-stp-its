@@ -1,6 +1,6 @@
 # Tata Letak Scene
 
-**Denah ini konseptual dan belum diukur.** Semua posisi dan ukuran di bawah adalah perkiraan dari foto dan keterangan tim. Nilainya dipusatkan di `INTERIOR_LAYOUT` (`src/models/interior.js`), `WORKSPACE_LAYOUT` (`furniture.js`), `CAFE_LAYOUT` (`cafeCounter.js`), `EXHIBITION_LAYOUT` (`exhibition.js`), dan `TRAIN_CONFIG`, `MOTORCYCLE_CONFIG`, `ROBOT_CONFIG` di `src/models/exhibits/`.
+**Denah ini konseptual dan belum diukur.** Semua posisi dan ukuran di bawah adalah perkiraan dari foto dan keterangan tim. Nilainya dipusatkan di `INTERIOR_LAYOUT` (`src/models/interior/interior.js`), `WORKSPACE_LAYOUT` (`furniture.js`), `CAFE_LAYOUT` (`cafeCounter.js`), `EXHIBITION_LAYOUT` (`exhibition.js`), dan `TRAIN_CONFIG`, `MOTORCYCLE_CONFIG`, `ROBOT_CONFIG` di `src/models/exhibits/`.
 
 ## Denah (dilihat dari atas; X ke kanan, Z ke bawah = sisi fasad depan)
 

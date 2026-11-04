@@ -1,6 +1,6 @@
 # Pohon Hubungan Objek
 
-Pohon lengkap (tampak luar, interior, dan pameran) ditampilkan otomatis di halaman utama (bagian "Pohon hubungan objek"), dibaca langsung dari scene graph yang dirender (`src/ui/renderSceneTree.js`). Ringkasan di bawah mengikuti `src/models/ccwsBuilding.js` dan `src/models/environment.js`; node sejenis diringkas, dan `→` berarti "induk dari".
+Pohon lengkap (tampak luar, interior, dan pameran) ditampilkan otomatis di halaman utama (bagian "Pohon hubungan objek"), dibaca langsung dari scene graph yang dirender (`src/ui/renderSceneTree.js`). Ringkasan di bawah mengikuti `src/models/building/ccwsBuilding.js` dan `src/models/exterior/environment.js`; node sejenis diringkas, dan `→` berarti "induk dari".
 
 ```text
 Scene
@@ -11,6 +11,9 @@ Scene
 │   ├── EastAnnex            gedung samping satu lantai (polos, atap pelana genteng)
 │   ├── BackBuilding         gedung belakang dua lantai (polos) + Connector satu lantai
 │   └── ParkingShed          → ShedRoof, ShedPost…, ShedFence → FenceFront/West/Back/East (pagar pipa biru, bukaan di ujung jalur paving)
+├── People
+│   ├── Sweeper → SweeperPelvis → Hip/Knee L/R, SweeperTorso → Shoulder/Elbow L/R, SweeperBroomPivot (sapu lidi)
+│   └── VisitorA, VisitorB, VisitorC → …Pelvis → Hip…/Knee…, …Torso → Shoulder…/Elbow…, Head
 └── CCWS
     ├── MainBlock
     │   ├── Walls
@@ -43,7 +46,7 @@ Scene
             └── BinRack → Shelf, Leg…, RailBack, PedalBin0..2 → Body, LidPivot → Lid, Knob
 ```
 
-Interior dan pameran (`src/models/interior.js`, `furniture.js`, `cafeCounter.js`, `exhibition.js`, `exhibits/*.js`) adalah anak `Scene` yang sejajar dengan `CCWS`:
+Interior dan pameran (`src/models/interior/interior.js`, `furniture.js`, `cafeCounter.js`, `exhibition.js`, `exhibits/*.js`) adalah anak `Scene` yang sejajar dengan `CCWS`:
 
 ```text
 Scene

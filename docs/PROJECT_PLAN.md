@@ -2,7 +2,7 @@
 
 ## Target
 
-Buat scene 3D CCWS ITS dengan WebGL2 langsung: tampak luar gedung (sudah ada), interior sederhana, dan pameran inovasi dengan beberapa interaksi. Naskah [tugas](Tugas%202%20Animasi,%20Object%203D,%20Lighting,%20Texture.md) memberi waktu **tiga minggu** dan maksimal dua anggota.
+Buat scene 3D CCWS ITS dengan WebGL2 langsung: tampak luar gedung (sudah ada), interior sederhana, dan pameran inovasi dengan beberapa interaksi. Naskah [tugas](NASKAH_TUGAS_2.md) memberi waktu **tiga minggu** dan maksimal dua anggota.
 
 CCWS adalah pilihan kerja tim, bukan objek yang diwajibkan dosen. Prioritas: bentuk yang dapat dikenali, penempatan yang masuk akal, render stabil, dan demonstrasi konsep kuliah, bukan detail dekoratif kecil.
 
@@ -18,7 +18,7 @@ CCWS adalah pilihan kerja tim, bukan objek yang diwajibkan dosen. Prioritas: ben
 7. Pameran: mockup kereta, motor listrik, dan lengan robot berpivot dengan simulasi ambil–lepas kotak.
 8. Interaksi lewat kontrol di halaman: preset kamera interior dan pameran, sendi robot, daya motor, dan pintu atau lampu kereta.
 
-Di luar target: kontrol orang pertama dengan tabrakan, simulasi fisika, dan picking mouse (hanya jika mudah ditambahkan nanti).
+Mode kamera jalan (WASD, sudut pandang orang) dengan tabrakan kotak sederhana ditambahkan atas permintaan tim. Di luar target: simulasi fisika. Picking mouse ditambahkan dengan uji sinar terhadap kotak batas, tanpa mengubah renderer.
 
 ## Selesai jika
 
@@ -29,7 +29,7 @@ Di luar target: kontrol orang pertama dengan tabrakan, simulasi fisika, dan pick
 
 ## Kondisi saat ini
 
-Sudah berjalan dan diuji di browser (Chromium headless dengan renderer perangkat lunak): tampak luar, interior (lantai, plafon dan balok, jendela, furnitur, kafe), mockup kereta, motor listrik, lengan robot dengan ambil–lepas, preset kamera interior, lampu interior, potongan atap. Belum: picking mouse, kontrol orang pertama, ukuran nyata, dan pencocokan motor serta lengan robot dengan pameran asli. Uji belum dilakukan di GPU sungguhan atau di browser selain Chromium.
+Sudah berjalan dan diuji di browser (Chromium headless dengan renderer perangkat lunak): tampak luar, interior (lantai, plafon dan balok, jendela, furnitur, kafe), mockup kereta, motor listrik, lengan robot dengan ambil–lepas, preset kamera interior, lampu interior, potongan atap. Picking mouse untuk membuka kontrol pameran sudah ada. Belum: ukuran nyata dan pencocokan motor serta lengan robot dengan pameran asli. Uji belum dilakukan di GPU sungguhan atau di browser selain Chromium.
 
 
 Lihat `REQUIREMENTS_TRACEABILITY.md` untuk pemetaan tiap kriteria ke fitur yang sudah dibuat. Yang masih kurang: nama kelompok, ukuran nyata dari lokasi (semua ukuran masih perkiraan dari foto), dan latihan demo.

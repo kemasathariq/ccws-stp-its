@@ -28,7 +28,7 @@ Keep the ambition balanced. Prioritize recognizable shapes, plausible placement,
 
 Read:
 - `CLAUDE.md`, `README.md`
-- `docs/Tugas 2 Animasi, Object 3D, Lighting, Texture.md`
+- `docs/NASKAH_TUGAS_2.md`
 - `docs/PROJECT_PLAN.md`, `docs/REQUIREMENTS_TRACEABILITY.md`
 - `docs/COURSE_CONCEPT_MAPPING.md`, `docs/FLOOR_PLAN.md`
 - `docs/SCENE_GRAPH.md`, `docs/COORDINATE_SYSTEM.md`

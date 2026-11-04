@@ -4,4 +4,4 @@ Simpan gambar tekstur yang digunakan di sini dan catat sumber serta izin penggun
 
 - `paving-herringbone.jpg`: potongan foto paving, dipakai pada tanah.
 
-Tekstur lain (teralis jendela, genteng, plester, noda alas, beton, rumput sintetis, kerikil, plafon kanopi) digambar lewat canvas di `src/models/proceduralTextures.js`.
+Tekstur lain (teralis jendela, genteng, plester, noda alas, beton, rumput sintetis, kerikil, plafon kanopi) digambar lewat canvas di `src/models/shared/proceduralTextures.js`.

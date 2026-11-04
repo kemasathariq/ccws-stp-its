@@ -7,3 +7,11 @@ dist/
 .env
 .env.*
 !.env.example
+# Screenshots and notes from design-review tooling
+.taste-skill/
+
+# Submission archive
+*.zip
+
+# Submission folder (copy of the source, zipped by hand)
+Tugas2_GrafKom/
