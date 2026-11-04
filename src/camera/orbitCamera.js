@@ -1,6 +1,7 @@
-import { lookAt, perspective } from './mat4.js';
+import { lookAt, perspective } from '../webgl/mat4.js';
 
-// Perspective camera orbiting a target: drag to rotate, scroll to zoom. A view is
+// Perspective camera orbiting a target: drag to rotate, Ctrl/⌘ + wheel (or a trackpad pinch,
+// which the browser reports as Ctrl + wheel) to zoom. A plain wheel keeps scrolling the page. A view is
 // { target, yaw, pitch, distance, fov } with angles in radians; `flyTo` glides to another
 // view (used for the photo viewpoints), `update` advances that glide each frame.
 export function createOrbitCamera(element, initialView) {
@@ -9,8 +10,10 @@ export function createOrbitCamera(element, initialView) {
   const state = copy(initial);
   let flight = null;
   let dragging = null;
+  let enabled = true;
 
   function onPointerDown(event) {
+    if (!enabled) return;
     flight = null;
     dragging = { x: event.clientX, y: event.clientY, id: event.pointerId };
     element.setPointerCapture(event.pointerId);
@@ -29,9 +32,12 @@ export function createOrbitCamera(element, initialView) {
   }
 
   function onWheel(event) {
-    event.preventDefault();
+    if (!enabled || !(event.ctrlKey || event.metaKey)) return;
+    event.preventDefault(); // also stops the browser's own page zoom
     flight = null;
-    state.distance = Math.min(110, Math.max(1.5, state.distance * Math.exp(event.deltaY * 0.001)));
+    // Pinch gestures send small steps; mouse wheels send large ones.
+    const rate = Math.abs(event.deltaY) < 20 ? 0.01 : 0.001;
+    state.distance = Math.min(110, Math.max(1.5, state.distance * Math.exp(event.deltaY * rate)));
   }
 
   element.addEventListener('pointerdown', onPointerDown);
@@ -91,5 +97,10 @@ export function createOrbitCamera(element, initialView) {
     element.removeEventListener('wheel', onWheel);
   }
 
-  return { matrices, flyTo, jumpTo, update, reset, dispose };
+  function setEnabled(on) {
+    enabled = on;
+    dragging = null;
+  }
+
+  return { matrices, flyTo, jumpTo, update, reset, setEnabled, dispose };
 }

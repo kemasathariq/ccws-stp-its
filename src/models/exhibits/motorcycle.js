@@ -1,6 +1,6 @@
 import { cylinder } from '../../webgl/geometry.js';
 import { addChildren, createNode } from '../../webgl/sceneNode.js';
-import { boxFrom, cylinderBetween, mesh } from '../parts.js';
+import { boxFrom, cylinderBetween, mesh } from '../shared/parts.js';
 
 // Simplified electric motorcycle on a display platform. No photo of the real exhibit is
 // available yet, so this is a generic electric motorcycle (battery pack between the wheels,

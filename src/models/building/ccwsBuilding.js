@@ -1,11 +1,11 @@
-import { cylinder, extrudedPolygon, gablePrism, profilePrism } from '../webgl/geometry.js';
-import { addChildren, createNode } from '../webgl/sceneNode.js';
-import { createTextTexture } from '../webgl/textTexture.js';
-import { boxFrom, cylinderBetween, gableEndProfile, mesh, seededRandom, slabWithOpenings } from './parts.js';
+import { cylinder, extrudedPolygon, gablePrism, profilePrism } from '../../webgl/geometry.js';
+import { addChildren, createNode } from '../../webgl/sceneNode.js';
+import { createTextTexture } from '../../webgl/textTexture.js';
+import { boxFrom, cylinderBetween, gableEndProfile, mesh, seededRandom, slabWithOpenings } from '../shared/parts.js';
 import {
   ceilingSlatTexture, concreteTexture, pebbleTexture, plasterTexture, plinthTexture, roofTileTexture, turfTexture,
   windowGrilleTexture,
-} from './proceduralTextures.js';
+} from '../shared/proceduralTextures.js';
 
 // Semua ukuran (meter) adalah PERKIRAAN dari foto dan video di public/assets/references,
 // bukan hasil pengukuran. Sumbu: X = panjang gedung (sisi co-working di -X),
@@ -41,8 +41,9 @@ const UPPER_MULLIONS = [0.53, 1.59, 2.65, 3.7, 4.75, 5.15, 6.2, 7.25, 8.3, 9.35,
 
 // Canopy on the west gable (eksterior-coworking-gable-kanopi, eksterior-kanopi-depan): the
 // side door sits under the gable apex (z = 0) and the canopy, about 4.9 m wide, is centred
-// on it. `reach` is how far the slab sticks out from the wall, `apex` its pentagon point.
-export const CANOPY = { zMin: -2.45, zMax: 2.45, reach: 7.0, apex: 8.4 };
+// on it. `reach` is how far the slab sticks out from the wall, `apex` its pentagon point,
+// `slabTop` the top of the slab; its underside (slabTop − 0.77) clears the side door head.
+export const CANOPY = { zMin: -2.45, zMax: 2.45, reach: 7.0, apex: 8.4, slabTop: 3.9 };
 
 
 const LAMP_COLOR = [1.0, 0.84, 0.6];
@@ -322,10 +323,9 @@ function createFacade(name, { position, rotation = [0, 0, 0], withEntrance }) {
     boxFrom('Plinth', [-L / 2, L / 2], [0, plinthHeight], [0, 1.4], MATERIALS.plinth),
   );
   const add = (...nodes) => facade.children.push(...nodes);
-  const sashes = [];
 
   // Upper floor: three glazed groups split by the wall strips the inner downpipes run
-  // down. The top row is fixed glazing; the bottom row is top-hung sashes that open.
+  // down. The top row is fixed glazing; the bottom row is top-hung sashes (hinge pivots).
   const upperGroups = [[-inner, -FACADE.outerBay[0]], [-FACADE.innerBay[1], FACADE.innerBay[1]], [FACADE.outerBay[0], inner]];
   const lines = mirrorValues(UPPER_MULLIONS);
   upperGroups.forEach(([x0, x1], g) => {
@@ -338,9 +338,7 @@ function createFacade(name, { position, rotation = [0, 0, 0], withEntrance }) {
     );
     const columns = lines.filter((x) => x >= x0 - 0.01 && x <= x1 + 0.01);
     for (let c = 0; c < columns.length - 1; c += 1) {
-      const sash = awningSash(`${name}Sash${g}_${c}`, [columns[c] + 0.04, columns[c + 1] - 0.04], transom - 0.04, transom - 0.04 - floorBandTop - 0.06);
-      sashes.push(sash);
-      add(sash);
+      add(awningSash(`${name}Sash${g}_${c}`, [columns[c] + 0.04, columns[c + 1] - 0.04], transom - 0.04, transom - 0.04 - floorBandTop - 0.06));
     }
   });
   lines.forEach((x, i) => add(
@@ -363,10 +361,10 @@ function createFacade(name, { position, rotation = [0, 0, 0], withEntrance }) {
   mirrorValues([3.7, 6.725, 9.875]).forEach((x, i) => add(planter(`${name}Planter${i}`, x, 100 + i + (withEntrance ? 0 : 50))));
   mirrorValues([FACADE.innerPipe, FACADE.endPipe]).forEach((x, i) => add(downpipe(`${name}Downpipe${i}`, x)));
 
-  if (!withEntrance) return { facade, sashes, doors: [], entrance: null };
+  if (!withEntrance) return { facade, doors: [], entrance: null };
   const { entrance, doors } = createEntrance();
   add(entrance);
-  return { facade, sashes, doors, entrance };
+  return { facade, doors, entrance };
 }
 
 // Wheelie bin (body, hinged lid, wheels) with its front facing −X, out from under the canopy.
@@ -387,7 +385,7 @@ function wheelieBin(name, [x, z], color) {
     cylinderBetween(`${name}WheelRight`, [0.3, 0.12, 0.24], [0.3, 0.12, 0.32], 0.12, MATERIALS.rubber, { segments: 12 }),
     lid,
   );
-  return { bin, lid };
+  return bin;
 }
 
 // Small round pedal bin with a hinged lid, standing on the metal rack.
@@ -403,7 +401,7 @@ function pedalBin(name, z, color) {
     mesh(`${name}Body`, cylinder(0.18, 0.21, 0.62, 16), body),
     lid,
   );
-  return { bin, lid };
+  return bin;
 }
 
 // Porte-cochère over the co-working side door (photos: eksterior-kanopi-samping,
@@ -418,11 +416,10 @@ function pedalBin(name, z, color) {
 // - At the apex both arms end in a vertical cut with a narrow gap between them, which reads
 //   as the two "fins" of the split ridge from the front.
 function createCanopy() {
-  const { zMin, zMax, reach, apex } = CANOPY;
+  const { zMin, zMax, reach, apex, slabTop } = CANOPY;
   const mid = (zMin + zMax) / 2;
   const column = 0.6;
   const columnX = [-reach - 0.4, -reach + 0.4];
-  const slabTop = 3.3;
   const columnTop = slabTop + 0.3;
   const apexTop = columnTop + 1.45;
   const gap = 0.16;
@@ -457,11 +454,8 @@ function createCanopy() {
   );
 
   // Three wheelie bins and, on a metal rack, three pedal bins (eksterior-kanopi-depan).
-  const lids = [];
   [[0.12, 0.3, 0.2], [0.12, 0.12, 0.13], [0.1, 0.3, 0.7]].forEach((color, i) => {
-    const { bin, lid } = wheelieBin(`WheelieBin${i}`, [-6.0, mid - 1.55 + i * 0.66], color);
-    canopy.children.push(bin);
-    lids.push(lid);
+    canopy.children.push(wheelieBin(`WheelieBin${i}`, [-6.0, mid - 1.55 + i * 0.66], color));
   });
   const rack = addChildren(
     createNode('BinRack', { position: [-6.0, 0.08, mid + 0.95] }),
@@ -470,12 +464,10 @@ function createCanopy() {
     boxFrom('RackRailBack', [0.2, 0.24], [0.55, 0.6], [-0.65, 0.65], MATERIALS.metal),
   );
   [[0.2, 0.6, 0.25], [0.9, 0.75, 0.1], [0.75, 0.12, 0.1]].forEach((color, i) => {
-    const { bin, lid } = pedalBin(`PedalBin${i}`, -0.43 + i * 0.43, color);
-    rack.children.push(bin);
-    lids.push(lid);
+    rack.children.push(pedalBin(`PedalBin${i}`, -0.43 + i * 0.43, color));
   });
   canopy.children.push(rack);
-  return { canopy, lids };
+  return canopy;
 }
 
 // West gable end with the CO-WORKING SPACE sign (photos: eksterior-coworking-*). The wall is
@@ -486,7 +478,7 @@ function createCoworkingEnd() {
   const door = 0.85;
   const doorNorth = doorLeaf('SideDoorNorth', [-0.09, 0.35, -door], door - 0.02, 2.3, 1, 'z');
   const doorSouth = doorLeaf('SideDoorSouth', [-0.09, 0.35, door], door - 0.02, 2.3, -1, 'z');
-  const { canopy, lids } = createCanopy();
+  const canopy = createCanopy();
   const end = addChildren(
     createNode('CoworkingEnd', { position: [-L / 2, 0, 0] }),
     boxFrom('SlotWindow', [-0.02, 0], [7.0, 8.3], [-0.28, 0.28], MATERIALS.ceilingDark),
@@ -495,7 +487,6 @@ function createCoworkingEnd() {
     boxFrom('SideDoorFrameHead', [-0.1, 0], [2.65, 2.85], [-door - 0.08, door + 0.08], MATERIALS.doorFrame),
     boxFrom('SideDoorFrameNorth', [-0.1, 0], [0.3, 2.85], [-door - 0.08, -door], MATERIALS.doorFrame),
     boxFrom('SideDoorFrameSouth', [-0.1, 0], [0.3, 2.85], [door, door + 0.08], MATERIALS.doorFrame),
-    boxFrom('SideDoorBack', [-0.03, 0], [0.3, 2.65], [-door, door], MATERIALS.ceilingDark),
     doorNorth,
     doorSouth,
     boxFrom('SideLanding', [-1.2, 0], [0, 0.35], [-1.4, 1.4], MATERIALS.concrete),
@@ -503,7 +494,7 @@ function createCoworkingEnd() {
     cylinderBetween('SinkTap', [-0.05, 1.05, 1.47], [-0.18, 1.05, 1.47], 0.015, MATERIALS.handle),
     canopy,
   );
-  return { end, canopy, doors: [doorNorth, doorSouth], lids };
+  return { end, canopy, doors: [doorNorth, doorSouth] };
 }
 
 // Builds CCWS and reports the nodes the animator moves and the lamps that light up at night.
@@ -523,8 +514,6 @@ export function createCcwsBuilding() {
     animated: {
       mainDoors: front.doors,
       sideDoors: coworking.doors,
-      sashes: [...front.sashes, ...back.sashes],
-      binLids: coworking.lids,
       // "Exploded view": each part slides away from its parent along these offsets.
       explode: [
         { node: roof, offset: [0, 4.5, 0] },
@@ -537,8 +526,8 @@ export function createCcwsBuilding() {
     },
     lamps: [
       { position: [0, 3.35, D / 2 + 0.85], color: LAMP_COLOR.map((c) => c * 2.2), range: 7 },
-      { position: [-L / 2 - 2.4, 2.4, mid], color: LAMP_COLOR.map((c) => c * 2.4), range: 7 },
-      { position: [-L / 2 - 5.2, 2.4, mid], color: LAMP_COLOR.map((c) => c * 2.4), range: 7 },
+      { position: [-L / 2 - 2.4, CANOPY.slabTop - 0.9, mid], color: LAMP_COLOR.map((c) => c * 2.4), range: 7 },
+      { position: [-L / 2 - 5.2, CANOPY.slabTop - 0.9, mid], color: LAMP_COLOR.map((c) => c * 2.4), range: 7 },
     ],
   };
 }

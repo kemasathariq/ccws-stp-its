@@ -1,8 +1,8 @@
-import { addChildren, createNode } from '../webgl/sceneNode.js';
-import { INTERIOR_LAYOUT } from './interior.js';
-import { createMotorcycle } from './exhibits/motorcycle.js';
-import { createRobotArm } from './exhibits/robotArm.js';
-import { createTrain } from './exhibits/train.js';
+import { addChildren, createNode } from '../../webgl/sceneNode.js';
+import { INTERIOR_LAYOUT } from '../interior/interior.js';
+import { createMotorcycle } from './motorcycle.js';
+import { createRobotArm } from './robotArm.js';
+import { createTrain } from './train.js';
 
 // Innovation exhibition: places the three exhibits in the east half of the hall. Positions are
 // ESTIMATED placements (x, z in world metres on the floor), not measured. The train stands

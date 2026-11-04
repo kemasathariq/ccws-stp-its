@@ -1,7 +1,7 @@
-import { box, cylinder, gablePrism, profilePrism, sphere } from '../webgl/geometry.js';
-import { addChildren, createNode } from '../webgl/sceneNode.js';
-import { CANOPY, CCWS_DIMENSIONS, MATERIALS } from './ccwsBuilding.js';
-import { alignY, boxFrom, cylinderBetween, gableEndProfile, mesh } from './parts.js';
+import { box, cylinder, gablePrism, profilePrism, sphere } from '../../webgl/geometry.js';
+import { addChildren, createNode } from '../../webgl/sceneNode.js';
+import { CANOPY, CCWS_DIMENSIONS, MATERIALS } from '../building/ccwsBuilding.js';
+import { alignY, boxFrom, cylinderBetween, gableEndProfile, mesh } from '../shared/parts.js';
 
 // Surroundings seen in the reference photos. Positions are ESTIMATES read from the photos,
 // not measurements, and are given relative to the CCWS gable ends and the canopy so they

@@ -1,6 +1,6 @@
-import { cylinder } from '../webgl/geometry.js';
-import { addChildren, createNode } from '../webgl/sceneNode.js';
-import { boxFrom, mesh } from './parts.js';
+import { cylinder } from '../../webgl/geometry.js';
+import { addChildren, createNode } from '../../webgl/sceneNode.js';
+import { boxFrom, mesh } from '../shared/parts.js';
 
 // Furniture builders for the co-working hall. Every builder returns a node whose origin is
 // on the floor, centred under the piece. Chairs and sofas face local +Z. Sizes are ESTIMATES

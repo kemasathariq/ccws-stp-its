@@ -1,11 +1,11 @@
-import { cylinder } from '../webgl/geometry.js';
-import { addChildren, createNode } from '../webgl/sceneNode.js';
-import { createTextTexture } from '../webgl/textTexture.js';
-import { CCWS_DIMENSIONS, MATERIALS, wallOpenings } from './ccwsBuilding.js';
+import { cylinder } from '../../webgl/geometry.js';
+import { addChildren, createNode } from '../../webgl/sceneNode.js';
+import { createTextTexture } from '../../webgl/textTexture.js';
+import { CCWS_DIMENSIONS, MATERIALS, wallOpenings } from '../building/ccwsBuilding.js';
 import { createCafeCounter } from './cafeCounter.js';
 import { createWorkspaceFurniture } from './furniture.js';
-import { boxFrom, mesh } from './parts.js';
-import { woodFloorTexture } from './proceduralTextures.js';
+import { boxFrom, mesh } from '../shared/parts.js';
+import { woodFloorTexture } from '../shared/proceduralTextures.js';
 
 // Simplified interior of the CCWS hall, built inside the hollow outer walls (see `createWalls`
 // in ccwsBuilding.js). Layout and sizes are ESTIMATES read from the interior photos; no
@@ -24,11 +24,13 @@ export const INTERIOR_LAYOUT = {
   exhibitionStartX: 2.5, // ESTIMATE: where the exhibition zone begins
   // Ceiling lights as point lights (world metres). Workspace lights and exhibition lights can
   // be switched separately. The renderer supports 8 point lights; 3 are used by the exterior lamps.
-  workspaceLights: [[-8, 5.7, 0], [-3.2, 5.7, 0], [1.5, 5.7, 0]],
-  exhibitionLights: [[6, 5.7, -3], [6, 5.7, 3]],
+  // Point lights sit a little below the fixtures so the light spreads to the floor instead of
+  // making a hot spot on the ceiling; they switch with dusk and dawn like the exterior lamps.
+  workspaceLights: [[-8, 5.1, 0], [-3.2, 5.1, 0], [1.5, 5.1, 0]],
+  exhibitionLights: [[6, 5.1, -3], [6, 5.1, 3]],
   lightColor: [1.0, 0.92, 0.8],
-  lightIntensity: 1.5,
-  lightRange: 11,
+  lightIntensity: 1.35,
+  lightRange: 13,
 };
 
 const FIXTURE_GLOW = 2.4;
@@ -46,9 +48,9 @@ function createMaterials() {
     wallPanel: { color: [0.82, 0.84, 0.86] },
     // Daylight seen through the window openings from inside; fades out at night (glowDay).
     pane: { color: [0.55, 0.6, 0.66], emissive: [0.75, 0.85, 1.0], glow: 0.65, glowDay: true, castShadow: false },
-    // Shared fixture materials; `setLightsOn` changes their glow so the lamps look on or off.
-    workFixture: { color: [0.95, 0.94, 0.9], emissive: WARM_WHITE, glow: FIXTURE_GLOW, glowAlways: true, castShadow: false },
-    exhibitFixture: { color: [0.95, 0.94, 0.9], emissive: WARM_WHITE, glow: FIXTURE_GLOW, glowAlways: true, castShadow: false },
+    // Ceiling fixtures glow with the day–night lamp level, like the exterior lamps.
+    workFixture: { color: [0.95, 0.94, 0.9], emissive: WARM_WHITE, glow: FIXTURE_GLOW, castShadow: false },
+    exhibitFixture: { color: [0.95, 0.94, 0.9], emissive: WARM_WHITE, glow: FIXTURE_GLOW, castShadow: false },
     muralTeal: { color: [0.24, 0.48, 0.52] },
     muralPeach: { color: [0.93, 0.64, 0.52] },
     muralNavy: { color: [0.2, 0.28, 0.4] },
@@ -235,14 +237,11 @@ export function createInterior() {
     color: layout.lightColor.map((c) => c * layout.lightIntensity),
     range: layout.lightRange,
   }));
-  const setGlow = (material) => (on) => { material.glow = on ? FIXTURE_GLOW : 0; };
 
   return {
     root,
     ceiling, // hidden in the cutaway view
     workspaceLights: makeLights(layout.workspaceLights),
     exhibitionLights: makeLights(layout.exhibitionLights),
-    setWorkspaceLights: setGlow(materials.workFixture),
-    setExhibitionLights: setGlow(materials.exhibitFixture),
   };
 }

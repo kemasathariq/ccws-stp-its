@@ -1,7 +1,8 @@
 import { compose, multiply } from './mat4.js';
 
 // A node holds a local transform, an optional mesh, and children. Its world matrix is
-// parentWorld · local, so moving a parent moves every child with it.
+// parentWorld · local, so moving a parent moves every child with it. Setting
+// `visible = false` hides a node together with all its children.
 export function createNode(name, { position = [0, 0, 0], rotation = [0, 0, 0], scale = [1, 1, 1], mesh = null } = {}) {
   return { name, position, rotation, scale, mesh, children: [] };
 }

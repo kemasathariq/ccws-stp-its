@@ -1,7 +1,7 @@
 import { box, cylinder } from '../../webgl/geometry.js';
 import { compose, multiply } from '../../webgl/mat4.js';
 import { addChildren, createNode } from '../../webgl/sceneNode.js';
-import { boxFrom, mesh } from '../parts.js';
+import { boxFrom, mesh } from '../shared/parts.js';
 
 // Articulated robot arm on a display platform. The real exhibit has not been photographed,
 // so this is a generic industrial arm; shapes and all sizes are ESTIMATES.

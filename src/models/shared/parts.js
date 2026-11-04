@@ -1,5 +1,5 @@
-import { box, cylinder } from '../webgl/geometry.js';
-import { createNode } from '../webgl/sceneNode.js';
+import { box, cylinder } from '../../webgl/geometry.js';
+import { createNode } from '../../webgl/sceneNode.js';
 
 // Small helpers shared by the building, environment and vehicle models. Every helper
 // returns an ordinary scene node, so the hierarchy stays plain data.

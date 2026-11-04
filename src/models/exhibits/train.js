@@ -1,7 +1,7 @@
 import { cylinder, profilePrism } from '../../webgl/geometry.js';
 import { addChildren, createNode } from '../../webgl/sceneNode.js';
 import { createTextTexture } from '../../webgl/textTexture.js';
-import { boxFrom, mesh } from '../parts.js';
+import { boxFrom, mesh } from '../shared/parts.js';
 
 // Train display segment from interior-pameran-kereta and interior-lorong-ruang-kerja: a
 // carriage mock-up with a dark grey skirt, white lower panel, thin red line, dark window band

@@ -1,7 +1,7 @@
-import { cylinder } from '../webgl/geometry.js';
-import { addChildren, createNode } from '../webgl/sceneNode.js';
-import { createTextTexture } from '../webgl/textTexture.js';
-import { boxFrom, mesh, seededRandom } from './parts.js';
+import { cylinder } from '../../webgl/geometry.js';
+import { addChildren, createNode } from '../../webgl/sceneNode.js';
+import { createTextTexture } from '../../webgl/textTexture.js';
+import { boxFrom, mesh, seededRandom } from '../shared/parts.js';
 
 // Coffee and snack counter (interior-meja-kasir-kantin, interior-lorong-ruang-kerja). The
 // layout is ESTIMATED: a front counter facing the hall, a back counter against the north wall
