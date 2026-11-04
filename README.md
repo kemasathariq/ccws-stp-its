@@ -1,90 +1,110 @@
-# CCWS ITS — Tugas 2 Grafika Komputer
+# Model 3D Co-working Space ITS
 
-Scene 3D Co-working Space (CCWS) ITS: tampak luar gedung, interior sederhana, dan pameran inovasi. Dibuat dengan **WebGL2 dan shader GLSL ES 3.00 langsung**, tanpa library 3D apa pun. Vite hanya dipakai sebagai server pengembangan dan alat build.
+Tugas 2 Grafika Komputer: Animasi, Object 3D, Lighting, Texture
 
-## Kelompok dan pembagian tugas
+| Anggota | NRP |
+|---|---|
+| Kemas Muhammad Athariq | 5025241102 |
+| Gilbran Mahdavikia Raja | 5025241134 |
 
-| Anggota | NRP | Tugas |
-|---|---|---|
-| Kemas Muhammad Athariq | 5025241102 | Dasar WebGL (context, shader, buffer, kamera, pencahayaan) dan integrasi; lengan robot (hierarki pivot, batas sudut sendi, ambil–lepas kotak) |
-| Gilbran Mahdavikia Raja | 5025241134 | Foto dan video referensi, fasad dan lingkungan, tekstur, isi halaman utama; interior (ruangan, furnitur, konter kafe), mockup kereta, dan motor listrik |
-| Bersama | | Hierarki dan animasi, penggabungan kode, uji browser, latihan penjelasan, dan pengumpulan |
+## Tentang proyek
 
-Rincian per berkas ada di [`docs/TASK_DIVISION.md`](docs/TASK_DIVISION.md).
+Proyek ini membangun ulang **Co-working Space (CCWS) ITS** sebagai scene 3D yang bisa dijelajahi di browser. Objek ini kami pilih karena bentuknya khas dan mudah dikenali: gedung dua lantai beratap genteng oranye dengan pintu masuk OPOP Training Center di fasad depan, sisi co-working dengan tulisan CO-WORKING SPACE, dan kanopi beton berbentuk rumah. Di dalamnya ada ruang kerja bersama, kafe, dan pameran inovasi.
+
+Seluruh scene dibuat dengan **WebGL2 dan shader GLSL ES 3.00**. Tidak ada library 3D: context, shader, buffer, matriks, kamera, pencahayaan, bayangan, dan tekstur semuanya ditulis sendiri. Vite hanya dipakai sebagai server pengembangan.
+
+Bentuk dan tata letak diturunkan dari foto dan video yang kami ambil sendiri di lokasi. Foto dan video itu ditampilkan di halaman yang sama dengan kanvas, sehingga model bisa langsung dibandingkan dengan aslinya.
+
+## Isi scene
+
+- **Gedung CCWS**: fasad dengan jendela teralis dan kusen 3D, kaca lantai atas dengan daun jendela berengsel, talang, pot tanaman, portal pintu masuk dengan pintu kaca ganda dan tangga–ramp–tangga, dinding samping bertulisan CO-WORKING SPACE, serta kanopi beton segilima dengan tempat sampah.
+- **Lingkungan**: paving herringbone, tanah dan pohon besar di sisi kanopi, palem, gedung tetangga, dan parkiran motor berpagar.
+- **Interior**: ruang kerja dengan meja, kursi, sofa, dan mural; konter kafe; lantai kayu dan plafon berbalok dengan lampu.
+- **Pameran inovasi**: mockup kereta (pintu geser, layar tujuan, lampu jendela), motor listrik (roda berputar pada porosnya), dan lengan robot lima sendi yang dapat mengambil dan melepas kotak.
+- **Orang**: pengunjung yang berjalan keluar-masuk gedung dan petugas yang menyapu halaman.
+
+## Animasi
+
+Semua animasi berbasis waktu, jadi kecepatannya sama di komputer mana pun.
+
+- Pengunjung berjalan menuju pintu, pintu membuka sendiri saat mereka lewat, lalu menutup kembali. Kaki dan lengan berayun lewat sendi pinggul, lutut, bahu, dan siku.
+- Petugas kebersihan membungkuk sambil mengayun sapu lidi.
+- Pohon dan pelepah palem bergoyang tertiup angin.
+- Siklus siang–malam: matahari dan bulan bergerak, langit berubah warna, dan lampu luar serta dalam menyala sendiri saat senja.
+- Pameran: roda motor, pintu kereta, dan sendi lengan robot digerakkan lewat kontrol.
+- "Urai hierarki": atap, fasad, portal, dan kanopi bergeser keluar dari induknya untuk memperlihatkan struktur hierarki.
+
+## Teknik grafika
+
+- **Transformasi dan hierarchical modelling.** Setiap objek adalah simpul scene graph dengan matriks lokal T · Rz · Ry · Rx · S. Matriks dunia sebuah simpul = matriks dunia induknya × matriks lokalnya, sehingga menggerakkan induk ikut menggerakkan semua anaknya. Bagian yang bergerak (daun pintu, roda, sendi robot, anggota tubuh) berputar pada simpul *pivot* yang diletakkan di engsel atau porosnya.
+- **Kamera.** Proyeksi perspektif dan matriks view `lookAt`. Ada kamera orbit dengan sudut-sudut yang disamakan dengan foto asli, dan kamera orang (WASD) setinggi mata yang bisa berjalan masuk ke gedung dengan tabrakan sederhana.
+- **Lighting.** Ambient hemisfer langit–tanah, cahaya matahari/bulan dengan Lambert dan Blinn-Phong, bayangan *shadow mapping* (peta kedalaman 2048² dengan PCF 3×3), hingga 8 lampu titik, pantulan langit pada kaca (Fresnel), cahaya jendela dan lampu di malam hari, serta kabut.
+- **Texture.** Tekstur gambar paving dari foto lokasi, tekstur prosedural yang digambar di canvas (plester, genteng, teralis jendela, beton, lantai kayu, rumput sintetis, kerikil, plafon), *bump mapping* dari kecerahan tekstur, dan huruf papan nama dengan *alpha test*.
+- **Shader.** Tiga program GLSL: pass bayangan dari arah matahari, langit layar penuh, dan scene utama.
+- **Picking.** Klik pada objek pameran dideteksi dengan sinar dari kamera terhadap kotak pembatas tiap mesh.
+
+## Halaman web
+
+Halaman utama (`index.html`) berisi, berurutan:
+
+1. Judul dan anggota kelompok.
+2. Kanvas WebGL dengan panel kontrol di sebelahnya.
+3. Foto asli lokasi (8 foto; klik untuk ukuran penuh).
+4. Video asli lokasi (2 video).
+5. Teknik grafika yang dipakai.
+6. Pohon hubungan objek, dibaca langsung dari scene graph yang sedang dirender.
+7. Pembagian tugas.
 
 ## Menjalankan
 
-Butuh Node.js 20.19 atau lebih baru (`.nvmrc`: 22.12.0).
+Butuh Node.js 20.19 atau lebih baru.
 
 ```bash
 npm install
-npm run dev       # server pengembangan
-npm run build     # build produksi ke dist/
-npm run preview   # menyajikan hasil build
+npm run dev
 ```
 
-Halaman bisa dibuka langsung dalam keadaan tertentu lewat parameter URL, misalnya `?jam=19.5&kamera=pintuUtama` atau `?mode=jalan`. Daftar lengkapnya ada di [`docs/INTERACTION_SPEC.md`](docs/INTERACTION_SPEC.md).
+Buka alamat yang muncul di terminal (biasanya `http://127.0.0.1:5173`). Halaman memakai modul JavaScript, jadi harus dibuka lewat server tersebut, bukan dengan klik ganda `index.html`.
 
-## Fitur
+## Kontrol
 
-- **Gedung CCWS:** fasad dengan kusen 3D dan jendela atas berengsel, portal OPOP Training Center dengan pintu kaca ganda serta tangga–ramp–tangga, sisi co-working dengan papan nama berketebalan dan pintu ganda, kanopi segilima dengan rangka ⌂, talang, pot tanaman, dan tempat sampah.
-- **Interior dan pameran:** dinding berongga dengan jendela, lantai kayu, plafon berbalok, meja, kursi, sofa, konter kafe, mockup kereta (pintu geser, layar, lampu), motor listrik (roda berputar pada pivot), dan lengan robot lima sendi yang bisa mengambil dan melepas kotak.
-- **Animasi berbasis pivot:** pengunjung berjalan keluar-masuk gedung dan pintu membuka saat mereka lewat, petugas menyapu halaman, pohon dan palem tertiup angin, siang–malam, serta "Urai hierarki" yang memisahkan bagian gedung dari induknya.
-- **Kamera:** orbit dengan sudut-sudut yang disamakan dengan foto asli, kamera interior, tampilan potongan (atap dibuka), dan mode **Jalan (WASD)** untuk berjalan seperti orang, termasuk masuk ke dalam gedung. Tombol **Layar penuh** membuat kanvas memenuhi layar; panel kontrol disembunyikan dan bisa dimunculkan lagi.
-- **Lighting:** ambient hemisfer, matahari dan bulan (Lambert + Blinn-Phong), bayangan shadow map dengan PCF, lampu luar dan lampu interior yang menyala otomatis menurut jam, pantulan langit pada kaca, cahaya jendela, kabut, dan langit gradasi.
-- **Tekstur:** paving dari foto tim, tekstur prosedural (plester, genteng, teralis, beton, lantai kayu, dan lainnya), bump mapping, dan huruf papan nama dengan alpha test.
+| Kontrol | Fungsi |
+|---|---|
+| Seret / gulir | Memutar dan memperbesar kamera orbit |
+| Sudut kamera | Pindah ke sudut foto asli, ke dalam gedung, atau ke tampilan potongan (atap dibuka) |
+| Jalan (WASD) | Klik kanvas lalu gerakkan mouse untuk melihat; W A S D atau panah untuk berjalan, Shift untuk berlari |
+| Waktu dan cahaya | Slider jam, siklus siang–malam, serta tombol bayangan dan tekstur untuk perbandingan |
+| Urai hierarki | Memisahkan bagian gedung dari induknya |
+| Klik objek pameran | Membuka kontrol lengan robot, motor listrik, atau kereta |
+| Layar penuh | Kanvas memenuhi layar; panel kontrol disembunyikan dan bisa dibuka dengan "Tampilkan kontrol". Esc untuk kembali |
 
-## Struktur repo
+## Struktur kode
 
 ```text
-.
-├── index.html                      Halaman utama (kanvas, kontrol, foto, video, pohon objek, pembagian tugas)
-├── src/
-│   ├── main.js                     Titik masuk
-│   ├── core/createApp.js           Loop render, opsi halaman, kamera aktif
-│   ├── webgl/                      Lapisan WebGL generik: renderer dan shader, matriks, geometri, scene graph, teks, picking
-│   ├── camera/                     Kamera orbit dan kamera jalan (WASD)
-│   ├── models/                     Konten scene (hanya membuat simpul dan geometri)
-│   │   ├── shared/                 Pembantu bentuk dan tekstur prosedural
-│   │   ├── building/               Gedung CCWS: fasad, portal, sisi co-working, kanopi
-│   │   ├── exterior/               Lingkungan sekitar dan orang
-│   │   ├── interior/               Ruang dalam, furnitur, konter kafe
-│   │   └── exhibits/               Pameran: tata letak, kereta, motor listrik, lengan robot
-│   ├── world/                      Siang–malam, animasi, gerak orang, area jalan dan tabrakan, preset kamera
-│   ├── ui/                         Pengikat kontrol halaman dan pohon objek
-│   └── styles/main.css
-├── public/assets/
-│   ├── references/                 Foto dan video asli lokasi (foto web 1200 px di photos/web/)
-│   ├── textures/                   Tekstur gambar (paving dari foto tim)
-│   └── fonts/                      Font halaman
-├── docs/                           Dokumen proyek (lihat daftar di bawah)
-└── prompts/                        Prompt perencanaan dan pengerjaan yang dipakai tim
+src/
+├── main.js, core/createApp.js   titik masuk, loop render, opsi halaman
+├── webgl/                       renderer dan shader, matriks, geometri, scene graph, picking
+├── camera/                      kamera orbit dan kamera jalan
+├── models/
+│   ├── building/                gedung CCWS
+│   ├── exterior/                lingkungan dan orang
+│   ├── interior/                ruang dalam, furnitur, kafe
+│   ├── exhibits/                kereta, motor listrik, lengan robot
+│   └── shared/                  pembantu bentuk dan tekstur prosedural
+├── world/                       siang–malam, animasi, gerak orang, area jalan, sudut kamera
+└── ui/                          kontrol halaman dan pohon objek
+public/assets/                   foto dan video asli, tekstur, font
 ```
 
-## Dokumen
+## Pembagian tugas
 
-| Dokumen | Isi |
+| Anggota | Tugas |
 |---|---|
-| [`NASKAH_TUGAS_2.md`](docs/NASKAH_TUGAS_2.md) | Naskah tugas dari dosen dan kriteria penilaian |
-| [`PROJECT_PLAN.md`](docs/PROJECT_PLAN.md) | Target dan cakupan proyek |
-| [`ROADMAP.md`](docs/ROADMAP.md) | Jadwal pengerjaan |
-| [`REQUIREMENTS_TRACEABILITY.md`](docs/REQUIREMENTS_TRACEABILITY.md) | Pemetaan setiap ketentuan dan kriteria penilaian ke fitur |
-| [`COURSE_CONCEPT_MAPPING.md`](docs/COURSE_CONCEPT_MAPPING.md) | Konsep grafika dan lokasinya di kode |
-| [`DEMO_AND_CHALLENGE_PLAN.md`](docs/DEMO_AND_CHALLENGE_PLAN.md) | Urutan demo dan latihan challenge |
-| [`INTERACTION_SPEC.md`](docs/INTERACTION_SPEC.md) | Kamera, kontrol halaman, parameter URL, dan animasi |
-| [`SCENE_GRAPH.md`](docs/SCENE_GRAPH.md) | Ringkasan pohon hubungan objek |
-| [`COORDINATE_SYSTEM.md`](docs/COORDINATE_SYSTEM.md) | Sumbu, satuan, dan urutan transformasi |
-| [`FLOOR_PLAN.md`](docs/FLOOR_PLAN.md) | Denah konseptual interior |
-| [`SITE_EVIDENCE_AND_ASSUMPTIONS.md`](docs/SITE_EVIDENCE_AND_ASSUMPTIONS.md) | Apa yang diambil dari foto dan apa yang diperkirakan |
-| [`INTEGRATION_CONTRACT.md`](docs/INTEGRATION_CONTRACT.md) | Pembagian tanggung jawab antarmodul |
-| [`ASSET_REGISTER.md`](docs/ASSET_REGISTER.md) | Sumber setiap foto, video, dan tekstur |
-| [`TASK_DIVISION.md`](docs/TASK_DIVISION.md) | Pembagian tugas anggota |
-| [`GIT_WORKFLOW.md`](docs/GIT_WORKFLOW.md) | Alur kerja git tim |
+| Kemas Muhammad Athariq | Dasar WebGL (context, shader, buffer, kamera, pencahayaan) dan integrasi; lengan robot (hierarki pivot, batas sudut sendi, ambil–lepas kotak) |
+| Gilbran Mahdavikia Raja | Foto dan video referensi, fasad dan lingkungan, tekstur, isi halaman utama; interior (ruangan, furnitur, konter kafe), mockup kereta, dan motor listrik |
+| Bersama | Hierarki dan animasi, penggabungan kode, pengujian, dan pengumpulan |
 
-## Keterbatasan
+## Catatan
 
-- Semua ukuran dan tata letak adalah perkiraan dari foto, belum diukur di lokasi; denah interior bersifat konseptual.
-- Sisi belakang CCWS dibuat sama dengan depan karena tidak ada fotonya. Motor listrik dan lengan robot belum ada fotonya, jadi bentuknya generik.
-- Mode jalan memakai tabrakan kotak sederhana: dinding, pameran, dan konter tidak bisa ditembus, tetapi meja, kursi, pohon, pagar, dan orang bisa. Tidak ada simulasi fisika.
-- Kontrol pameran muncul sebagai popup saat lengan robot, motor, atau kereta diklik (picking dengan sinar terhadap kotak batas tiap mesh, `src/webgl/picking.js`). Picking hanya aktif dari dalam gedung atau saat atap dibuka, dan bisa salah pilih di tepi objek karena memakai kotak batas, bukan segitiga.
-- Diuji di Chromium headless (renderer perangkat lunak); belum di GPU sungguhan atau browser lain.
+- Ukuran gedung dan tata letak interior adalah perkiraan dari foto dan video, belum diukur langsung di lokasi.
+- Agar ukuran berkas pengumpulan kecil, foto asli disimpan dengan lebar 2000 px dan video dalam 720p.
